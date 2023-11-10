@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Omnipay\\Skeleton\\": "src"
+            "Omnipay\\NewebPay\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Omnipay\\Skeleton\\Tests\\": "tests"
+            "Omnipay\\NewebPay\\Tests\\": "tests"
         }
     },
     "scripts": {

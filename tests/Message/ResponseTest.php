@@ -1,8 +1,8 @@
 <?php
 
-namespace Omnipay\Skeleton\Tests\Message;
+namespace Omnipay\NewebPay\Tests\Message;
 
-use Omnipay\Skeleton\Message\Response;
+use Omnipay\NewebPay\Message\Response;
 use Omnipay\Tests\TestCase;
 
 class ResponseTest extends TestCase

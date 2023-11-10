@@ -1,18 +1,18 @@
 <?php
 
-namespace Omnipay\Skeleton;
+namespace Omnipay\NewebPay;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\Skeleton\Message\AuthorizeRequest;
+use Omnipay\NewebPay\Message\AuthorizeRequest;
 
 /**
- * Skeleton Gateway
+ * NewebPay Gateway
  */
-class SkeletonGateway extends AbstractGateway
+class NewebPayGateway extends AbstractGateway
 {
     public function getName()
     {
-        return 'Skeleton';
+        return 'NewebPay';
     }
 
     public function getDefaultParameters()

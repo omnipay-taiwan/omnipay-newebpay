@@ -1,20 +1,21 @@
 <?php
 
-namespace Omnipay\Skeleton\Tests;
+namespace Omnipay\NewebPay\Tests;
 
-use Omnipay\Skeleton\SkeletonGateway;
+use Omnipay\NewebPay\NewebPayGateway;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
 {
-    /** @var SkeletonGateway */
+    /** @var NewebPayGateway */
     protected $gateway;
+    protected $options;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->gateway = new SkeletonGateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway = new NewebPayGateway($this->getHttpClient(), $this->getHttpRequest());
 
         $this->options = [
             'amount' => '10.00',
