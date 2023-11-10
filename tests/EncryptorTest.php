@@ -10,7 +10,7 @@ class EncryptorTest extends TestCase
     private $key = "Fs5cX1TGqYM2PpdbE14a9H83YQSQF5jn";
     private $iv = "C6AcmfqJILwgnhIP";
     private $mid = "MS127874575";
-    private $timestamp = 1695795410;
+    private $timestamp = '1695795410';
 
     public function testEncrypt(): void
     {
@@ -47,48 +47,37 @@ class EncryptorTest extends TestCase
 
     public function testCheckCode(): void
     {
-        $check_code = [
-            "MerchantID" => 'MS12345678',
-            "Amt" => '10',
-            "MerchantOrderNo" => 'MyCompanyOrder_1638423361',
-            "TradeNo" => '21120214151152468',
-        ];
-        ksort($check_code);
-        $check_str = http_build_query($check_code);
-        $CheckCode = "HashIV=".$this->iv."&$check_str&HashKey=".$this->key;
+        $encryptor = $this->givenEncryptor();
 
         self::assertEquals(
-            '0D50996224E46B436D182F37AB4300740BDD57375D8E8202B3E8F5E97068DE81',
-            strtoupper(hash("sha256", $CheckCode))
+            '3BBBD18B6C2446E35764D587168997BF719FA72E00C569D2A55E45D67149EC71',
+            $encryptor->makeHash([
+                "MerchantID" => $this->mid,
+                "Amt" => '10',
+                "MerchantOrderNo" => 'MyCompanyOrder_'.$this->timestamp,
+                "TradeNo" => '21120214151152468',
+            ])
         );
     }
 
-    public function testCheckValue()
+    public function testCheckValue(): void
     {
-        $check_code = [
-            "MerchantID" => 'MS12345678',
-            "Amt" => '10',
-            "MerchantOrderNo" => 'MyCompanyOrder_1638423361',
-        ];
-        ksort($check_code);
-        $check_str = http_build_query($check_code);
-        $CheckCode = "HashIV=".$this->iv."&$check_str&HashKey=".$this->key;
+        $encryptor = $this->givenEncryptor();
 
         self::assertEquals(
-            '270E971A614C3141FB20E62AFBA3244F19512DB462062B365D15CB6AC8DBCFE9',
-            strtoupper(hash("sha256", $CheckCode))
+            '914816C5F8DB19668860E6EB29FDE82D45134E31D9399AE8F5931865AC0972E6',
+            $encryptor->makeHash([
+                "MerchantID" => $this->mid,
+                "Amt" => '10',
+                "MerchantOrderNo" => 'MyCompanyOrder_'.$this->timestamp,
+            ])
         );
     }
 
-
-    /**
-     * @return Encryptor
-     */
     private function givenEncryptor(): Encryptor
     {
         return new Encryptor($this->key, $this->iv);
     }
-
 
     private function opensslEncrypt(): string
     {
