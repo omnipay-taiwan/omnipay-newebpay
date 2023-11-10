@@ -34,4 +34,9 @@ class Encryptor
             )
         );
     }
+
+    public function decrypt($plainText): string
+    {
+        return $this->cipher->decrypt(hex2bin($plainText));
+    }
 }
