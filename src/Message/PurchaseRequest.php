@@ -9,6 +9,15 @@ class PurchaseRequest extends AbstractRequest
 {
     use HasDefaults;
 
+    protected $liveEndpoint = 'https://core.newebpay.com/MPG/mpg_gateway';
+
+    protected $testEndpoint = 'https://ccore.newebpay.com/MPG/mpg_gateway';
+
+    public function getEndpoint()
+    {
+        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+    }
+
     /**
      * 回傳格式.
      * JSON 或是 String
@@ -147,7 +156,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.若使用特殊符號，系統將自動過濾
      *
      * @param  string  $value
-     * @return PurchaseRequest
+     * @return static
      */
     public function setItemDesc($value)
     {
@@ -462,7 +471,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.此欄位值=０或無值時，即代表不開啟分期
      *
      * @param  string  $value
-     * @return PurchaseRequest
+     * @return static
      */
     public function setInstFlag($value)
     {
@@ -670,7 +679,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當該筆訂單金額小於 20 元或超過 4 萬元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項
      *
      * @param  int  $value
-     * @return PurchaseRequest
+     * @return static
      */
     public function setBARCODE($value)
     {
@@ -879,6 +888,134 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * 信用卡國民旅遊卡交易註記.
+     * 1.註記此筆交易是否為國民旅遊卡交易。
+     * 1=國民旅遊卡交易
+     *   0 或者未有此參數=非國民旅遊卡交易
+     *
+     * @param  int  $value
+     * @return static
+     */
+    public function setNTCB($value)
+    {
+        return $this->setParameter('NTCB', $value);
+    }
+
+    /**
+     * @return int
+     */
+    public function getNTCB()
+    {
+        return $this->getParameter('NTCB');
+    }
+
+    /**
+     * 旅遊地區代號.
+     * 旅遊地區代號，請參考旅遊地區代號對照表。
+     * 例：如旅遊地區為台北市則此欄位為 001。
+     *
+     * @param  string  $value
+     * @return static
+     */
+    public function setNTCBLocate($value)
+    {
+        return $this->setParameter('NTCBLocate', $value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getNTCBLocate()
+    {
+        return $this->getParameter('NTCBLocate');
+    }
+
+    /**
+     * 國民旅遊卡起始日期.
+     * 格式為：YYYY-MM-DD 例：2015-01-01
+     *
+     * @param  string  $value
+     * @return static
+     */
+    public function setNTCBStartDate($value)
+    {
+        return $this->setParameter('NTCBStartDate', $value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getNTCBStartDate()
+    {
+        return $this->getParameter('NTCBStartDate');
+    }
+
+    /**
+     * 國民旅遊卡結束日期.
+     * 格式為：YYYY-MM-DD 例：2015-01-01
+     *
+     * @param  string  $value
+     * @return static
+     */
+    public function setNTCBEndDate($value)
+    {
+        return $this->setParameter('NTCBEndDate', $value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getNTCBEndDate()
+    {
+        return $this->getParameter('NTCBEndDate');
+    }
+
+    /**
+     * 付款人綁定資料.
+     * 1.可對應付款人之資料，用於綁定付款人與信用卡卡號時使用，例：會員編號、Email。
+     * 2.限英、數字，「.」、「_」、「@」、「-」格式。
+     *
+     * @param  string  $value
+     * @return static
+     */
+    public function setTokenTerm($value)
+    {
+        return $this->setParameter('TokenTerm', $value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getTokenTerm()
+    {
+        return $this->getParameter('TokenTerm');
+    }
+
+    /**
+     * 指定付款人信用卡快速結帳必填欄位.
+     * 可指定付款人需填寫的信用卡資訊，不同的參數值對應填寫不同的資訊，參數值與對應資訊說明如下：
+     *   1 = 必填信用卡到期日與背面末三碼
+     *   2 = 必填信用卡到期日
+     *   3 = 必填背面末三碼
+     * 未有此參數或帶入其他無效參數，系統預設為參數 1。
+     *
+     * @param  int  $value
+     * @return static
+     */
+    public function setTokenTermDemand($value)
+    {
+        return $this->setParameter('TokenTermDemand', $value);
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getTokenTermDemand()
+    {
+        return $this->getParameter('TokenTermDemand');
+    }
+
+    /**
      * @throws InvalidRequestException
      */
     public function getData(): array
@@ -889,7 +1026,7 @@ class PurchaseRequest extends AbstractRequest
             'MerchantID' => $this->getMerchantID(),
             'RespondType' => $this->getRespondType(),
             'TimeStamp' => $this->getTimeStamp(),
-            'Version' => $this->getVersion() ?: '2.0',
+            'Version' => $this->getVersion(),
             'LangType' => $this->getLangType(),
             'MerchantOrderNo' => $this->getTransactionId(),
             'Amt' => (int) $this->getAmount(),
@@ -927,8 +1064,14 @@ class PurchaseRequest extends AbstractRequest
             'EZPWECHAT' => $this->getEZPWECHAT(),
             'EZPALIPAY' => $this->getEZPALIPAY(),
             'LgsType' => $this->getLgsType(),
+            'NTCB' => $this->getNTCB(),
+            'NTCBLocate' => $this->getNTCBLocate(),
+            'NTCBStartDate' => $this->getNTCBStartDate(),
+            'NTCBEndDate' => $this->getNTCBEndDate(),
+            'TokenTerm' => $this->getTokenTerm(),
+            'TokenTermDemand' => $this->getTokenTermDemand(),
         ], static function ($value) {
-            return $value !== null;
+            return $value !== null && $value !== '';
         });
     }
 

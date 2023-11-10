@@ -16,19 +16,23 @@ class EncryptorTest extends TestCase
     {
         $encryptor = $this->givenEncryptor();
 
-        self::assertEquals(
-            $this->opensslEncrypt(),
-            $encryptor->encrypt([
-                'MerchantID' => $this->mid,
-                'RespondType' => 'String',
-                'TimeStamp' => $this->timestamp,
-                'Version' => '2.0',
-                'MerchantOrderNo' => 'Vanespl_ec_'.$this->timestamp,
-                'Amt' => '30',
-                'ItemDesc' => 'test',
-                'NotifyURL' => 'https://webhook.site/d4db5ad1-2278-466a-9d66-78585c0dbadb',
-            ])
-        );
+        $tradeInfo = $encryptor->encrypt([
+            'MerchantID' => $this->mid,
+            'RespondType' => 'String',
+            'TimeStamp' => $this->timestamp,
+            'Version' => '2.0',
+            'MerchantOrderNo' => 'Vanespl_ec_'.$this->timestamp,
+            'Amt' => '30',
+            'ItemDesc' => 'test',
+            'NotifyURL' => 'https://webhook.site/d4db5ad1-2278-466a-9d66-78585c0dbadb',
+        ]);
+
+        self::assertEquals($this->opensslEncrypt(), $tradeInfo);
+
+        $hashed = strtoupper(hash("sha256", "HashKey=".$this->key."&".$tradeInfo."&HashIV=".$this->iv));
+        self::assertEquals('84E4D9F96537E029F8450BE1E759080F9AF6995921B7F6F9AAFDDD2C36E7B287', $hashed);
+
+        self::assertEquals($hashed, $encryptor->makeHash($tradeInfo, true));
     }
 
     public function testDecrypt(): void
@@ -99,10 +103,7 @@ class EncryptorTest extends TestCase
             $edata
         );
 
-        $hashed = strtoupper(hash("sha256", "HashKey=".$this->key."&".$edata."&HashIV=".$this->iv));
-        self::assertEquals('84E4D9F96537E029F8450BE1E759080F9AF6995921B7F6F9AAFDDD2C36E7B287', $hashed);
-
-        return $hashed;
+        return $edata;
     }
 
     private function opensslDecrypt($data): string

@@ -22,7 +22,7 @@ class Encryptor
 
     public function encrypt(array $data): string
     {
-        return $this->makeHash(bin2hex($this->cipher->encrypt(http_build_query($data))), true);
+        return bin2hex($this->cipher->encrypt(http_build_query($data)));
     }
 
     public function decrypt(string $plainText): string
