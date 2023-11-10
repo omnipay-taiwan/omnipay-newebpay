@@ -1,0 +1,47 @@
+{
+    "name": "omnipay-taiwan/omnipay-newebpay",
+    "description": "newebpay driver for the Omnipay payment processing library",
+    "keywords": [
+        "omnipay",
+        "newebpay"
+    ],
+    "homepage": "https://github.com/omnipay-taiwan/omnipay-newebpay",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "recca0120",
+            "email": "recca0120@gmail.com",
+            "homepage": "https://github.com/recca0120"
+        }
+    ],
+    "require": {
+        "omnipay/common": "^3.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "omnipay/tests": "^3.0|^4.0",
+        "squizlabs/php_codesniffer": "^3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\Skeleton\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omnipay\\Skeleton\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 src/",
+        "fix-style": "phpcbf -p --standard=PSR2 src/"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
