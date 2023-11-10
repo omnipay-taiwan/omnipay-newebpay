@@ -2,12 +2,12 @@
 
 namespace Omnipay\NewebPay\Tests;
 
-use Omnipay\NewebPay\NewebPayGateway;
+use Omnipay\NewebPay\Gateway;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
 {
-    /** @var NewebPayGateway */
+    /** @var Gateway */
     protected $gateway;
     protected $options;
 
@@ -15,7 +15,7 @@ class GatewayTest extends GatewayTestCase
     {
         parent::setUp();
 
-        $this->gateway = new NewebPayGateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
 
         $this->options = [
             'amount' => '10.00',

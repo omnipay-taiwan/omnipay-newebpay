@@ -2,6 +2,8 @@
 
 namespace Omnipay\NewebPay\Message;
 
+use Omnipay\NewebPay\Traits\HasDefaults;
+
 /**
  * Authorize Request
  *
@@ -9,6 +11,8 @@ namespace Omnipay\NewebPay\Message;
  */
 class AuthorizeRequest extends AbstractRequest
 {
+    use HasDefaults;
+
     public function getData()
     {
         $this->validate('amount', 'card');

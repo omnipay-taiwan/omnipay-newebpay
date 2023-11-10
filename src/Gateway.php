@@ -4,33 +4,28 @@ namespace Omnipay\NewebPay;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\NewebPay\Message\AuthorizeRequest;
+use Omnipay\NewebPay\Traits\HasDefaults;
 
 /**
  * NewebPay Gateway
  */
-class NewebPayGateway extends AbstractGateway
+class Gateway extends AbstractGateway
 {
+    use HasDefaults;
+
     public function getName()
     {
         return 'NewebPay';
     }
 
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         return [
-            'key' => '',
+            'HashKey' => '',
+            'HashIV' => '',
+            'MerchantID' => '',
             'testMode' => false,
         ];
-    }
-
-    public function getKey()
-    {
-        return $this->getParameter('key');
-    }
-
-    public function setKey($value)
-    {
-        return $this->setParameter('key', $value);
     }
 
     /**
