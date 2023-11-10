@@ -4,6 +4,12 @@ namespace Omnipay\NewebPay\Traits;
 
 trait HasDefaults
 {
+    /**
+     * 藍新金流商店代號
+     *
+     * @param  string  $value
+     * @return static
+     */
     public function setHashKey($value)
     {
         return $this->setParameter('HashKey', $value);
