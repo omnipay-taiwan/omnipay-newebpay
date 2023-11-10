@@ -32,5 +32,8 @@ class GatewayTest extends GatewayTestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals('1234', $response->getTransactionReference());
         $this->assertNull($response->getMessage());
+        if (PHP_VERSION_ID <= 70200) {
+            throw new \RuntimeException('error');
+        }
     }
 }

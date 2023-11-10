@@ -60,3 +60,9 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit --testdox --verbose
+
+      - name: sshx
+        if: ${{ failure() }}
+        run: |
+          curl -sSf https://sshx.io/get | sh
+          sshx
