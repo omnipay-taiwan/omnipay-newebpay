@@ -39,22 +39,22 @@ class GatewayTest extends GatewayTestCase
 
     public function testPurchase(): void
     {
-        $timestamp = time();
-        $orderNo = "test0315001_12345678";
+        $timestamp = 1699638290;
+        $orderNo = "test0315001";
 
         $response = $this->gateway->purchase([
+            'transactionId' => $orderNo,
+            'amount' => '30',
+            'description' => 'test',
+            'notifyUrl' => 'https://webhook.site/97c6899f-077b-4025-9948-9ee96a38dfb7',
             'TimeStamp' => $timestamp,
-            'MerchantOrderNo' => $orderNo,
-            'Amt' => '30',
             'VACC' => '1',
             'ALIPAY' => '0',
             'WEBATM' => '1',
             'CVS' => '1',
             'CREDIT' => '1',
-            'NotifyURL' => 'https://webhook.site/97c6899f-077b-4025-9948-9ee96a38dfb7',
             'LoginType' => '0',
             'InstFlag' => '0',
-            'ItemDesc' => 'test',
         ])->send();
 
         self::assertEquals([

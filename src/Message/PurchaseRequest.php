@@ -2,6 +2,7 @@
 
 namespace Omnipay\NewebPay\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
 class PurchaseRequest extends AbstractRequest
@@ -105,7 +106,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function setMerchantOrderNo($value)
     {
-        return $this->setParameter('MerchantOrderNo', $value);
+        return $this->setTransactionId($value);
     }
 
     /**
@@ -113,7 +114,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getMerchantOrderNo()
     {
-        return $this->getParameter('MerchantOrderNo');
+        return $this->getTransactionId();
     }
 
     /**
@@ -126,15 +127,16 @@ class PurchaseRequest extends AbstractRequest
      */
     public function setAmt($value)
     {
-        return $this->setParameter('Amt', $value);
+        return $this->setAmount($value);
     }
 
     /**
      * @return int
+     * @throws InvalidRequestException
      */
     public function getAmt()
     {
-        return $this->getParameter('Amt');
+        return (int) $this->getAmount();
     }
 
     /**
@@ -149,7 +151,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function setItemDesc($value)
     {
-        return $this->setParameter('ItemDesc', $value);
+        return $this->setDescription($value);
     }
 
     /**
@@ -157,7 +159,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getItemDesc()
     {
-        return $this->getParameter('ItemDesc');
+        return $this->getDescription();
     }
 
     /**
@@ -206,50 +208,6 @@ class PurchaseRequest extends AbstractRequest
     public function getExpireDate()
     {
         return $this->getParameter('ExpireDate');
-    }
-
-    /**
-     * 支付完成返回商店網址.
-     * 1.交易完成後，以 Form Post 方式導回商店頁面
-     * 2.若支付工具為玉山 Wallet、台灣 Pay 或本欄位為空值，
-     *   於交易完成後，消費者將停留在藍新金流付款或取號結果頁面
-     * 3.只接受 80 與 443 Port
-     *
-     * @param  string  $value
-     * @return static
-     */
-    public function setReturnURL($value)
-    {
-        return $this->setParameter('ReturnURL', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getReturnURL()
-    {
-        return $this->getParameter('ReturnURL');
-    }
-
-    /**
-     * 支付通知網址.
-     * 1.以幕後方式回傳給商店相關支付結果資料；請參考 4.2.2 回應參數-支付完成
-     * 2. 只接受 80 與 443 Port
-     *
-     * @param  string  $value
-     * @return static
-     */
-    public function setNotifyURL($value)
-    {
-        return $this->setParameter('NotifyURL', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getNotifyURL()
-    {
-        return $this->getParameter('NotifyURL');
     }
 
     /**
@@ -920,26 +878,58 @@ class PurchaseRequest extends AbstractRequest
         return $this->getParameter('LgsType');
     }
 
+    /**
+     * @throws InvalidRequestException
+     */
     public function getData(): array
     {
-        return [
+        $this->validate('transactionId', 'amount', 'description');
+
+        return array_filter([
             'MerchantID' => $this->getMerchantID(),
+            'RespondType' => $this->getRespondType(),
             'TimeStamp' => $this->getTimeStamp(),
             'Version' => $this->getVersion() ?: '2.0',
-            'RespondType' => $this->getRespondType(),
-            'MerchantOrderNo' => $this->getMerchantOrderNo(),
-//            'Amt' => (int) $this->getAmount(),
-            'Amt' => $this->getAmt(),
-            'VACC' => $this->getVACC(),
-            'ALIPAY' => $this->getALIPAY(),
-            'WEBATM' => $this->getWEBATM(),
-            'CVS' => $this->getCVS(),
-            'CREDIT' => $this->getCREDIT(),
-            'NotifyURL' => $this->getNotifyURL(),
+            'LangType' => $this->getLangType(),
+            'MerchantOrderNo' => $this->getTransactionId(),
+            'Amt' => (int) $this->getAmount(),
+            'ItemDesc' => $this->getDescription(),
+            'TradeLimit' => $this->getTradeLimit(),
+            'ExpireDate' => $this->getExpireDate(),
+            'ReturnURL' => $this->getReturnUrl(),
+            'NotifyURL' => $this->getNotifyUrl(),
+            'CustomerURL' => $this->getCustomerURL(),
+            'ClientBackURL' => $this->getClientBackURL(),
+            'Email' => $this->getEmail(),
+            'EmailModify' => $this->getEmailModify(),
             'LoginType' => $this->getLoginType(),
+            'OrderComment' => $this->getOrderComment(),
+            'CREDIT' => $this->getCREDIT(),
+            'ANDROIDPAY' => $this->getANDROIDPAY(),
+            'SAMSUNGPAY' => $this->getSAMSUNGPAY(),
+            'LINEPAY' => $this->getLINEPAY(),
+            'ImageUrl' => $this->getImageUrl(),
             'InstFlag' => $this->getInstFlag(),
-            'ItemDesc' => $this->getItemDesc(),
-        ];
+            'CreditRed' => $this->getCreditRed(),
+            'UNIONPAY' => $this->getUNIONPAY(),
+            'CREDITAE' => $this->getCREDITAE(),
+            'WEBATM' => $this->getWEBATM(),
+            'VACC' => $this->getVACC(),
+            'BankType' => $this->getBankType(),
+            'ALIPAY' => $this->getALIPAY(),
+            'CVS' => $this->getCVS(),
+            'BARCODE' => $this->getBARCODE(),
+            'ESUNWALLET' => $this->getESUNWALLET(),
+            'TAIWANPAY' => $this->getTAIWANPAY(),
+            'FULA' => $this->getFULA(),
+            'CVSCOM' => $this->getCVSCOM(),
+            'EZPAY' => $this->getEZPAY(),
+            'EZPWECHAT' => $this->getEZPWECHAT(),
+            'EZPALIPAY' => $this->getEZPALIPAY(),
+            'LgsType' => $this->getLgsType(),
+        ], static function ($value) {
+            return $value !== null;
+        });
     }
 
     public function sendData($data): PurchaseResponse
