@@ -3,7 +3,9 @@
 namespace Omnipay\NewebPay;
 
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
+use Omnipay\NewebPay\Message\AcceptNotificationRequest;
 use Omnipay\NewebPay\Message\AuthorizeRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
@@ -47,5 +49,10 @@ class Gateway extends AbstractGateway
     public function completePurchase(array $options = []): RequestInterface
     {
         return $this->createRequest(CompletePurchaseRequest::class, $options);
+    }
+
+    public function acceptNotification(array $options = []): NotificationInterface
+    {
+        return $this->createRequest(AcceptNotificationRequest::class, []);
     }
 }

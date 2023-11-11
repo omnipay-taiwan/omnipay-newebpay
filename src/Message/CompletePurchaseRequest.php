@@ -10,7 +10,7 @@ class CompletePurchaseRequest extends AbstractRequest
 {
     use HasDefaults;
 
-    public function getData(): array
+    public function getData()
     {
         return $this->httpRequest->request->all();
     }
@@ -18,7 +18,15 @@ class CompletePurchaseRequest extends AbstractRequest
     /**
      * @throws InvalidResponseException
      */
-    public function sendData($data): CompletePurchaseResponse
+    public function sendData($data)
+    {
+        return $this->response = new CompletePurchaseResponse($this, $this->decrypt($data));
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    protected function decrypt($data)
     {
         $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
 
@@ -29,6 +37,6 @@ class CompletePurchaseRequest extends AbstractRequest
         $data['Result'] = [];
         parse_str($encryptor->decrypt($data['TradeInfo']), $data['Result']);
 
-        return $this->response = new CompletePurchaseResponse($this, $data);
+        return $data;
     }
 }
