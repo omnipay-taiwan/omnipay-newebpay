@@ -7,17 +7,17 @@ use phpseclib3\Crypt\AES;
 class Encryptor
 {
     private $cipher;
-    private $key;
-    private $iv;
+    private $hashKey;
+    private $hashIv;
 
-    public function __construct(string $key, string $iv)
+    public function __construct(string $hashKey, string $hashIv)
     {
-        $this->key = $key;
-        $this->iv = $iv;
+        $this->hashKey = $hashKey;
+        $this->hashIv = $hashIv;
 
         $this->cipher = new AES('cbc');
-        $this->cipher->setKey($this->key);
-        $this->cipher->setIv($this->iv);
+        $this->cipher->setKey($this->hashKey);
+        $this->cipher->setIv($this->hashIv);
     }
 
     public function encrypt(array $data): string
@@ -39,8 +39,8 @@ class Encryptor
             $plainText = $data;
         }
 
-        $prefix = 'HashIV='.$this->iv;
-        $suffix = 'HashKey='.$this->key;
+        $prefix = 'HashIV='.$this->hashIv;
+        $suffix = 'HashKey='.$this->hashKey;
 
         if ($swap === true) {
             $temp = $suffix;
@@ -49,5 +49,10 @@ class Encryptor
         }
 
         return strtoupper(hash("sha256", implode('&', [$prefix, $plainText, $suffix])));
+    }
+
+    public function check(string $data, string $hashedValue): bool
+    {
+        return hash_equals($hashedValue, $this->makeHash($data, true));
     }
 }
