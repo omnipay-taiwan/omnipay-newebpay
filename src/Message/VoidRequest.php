@@ -86,13 +86,22 @@ class VoidRequest extends AbstractRequest
             'MerchantID_' => $this->getMerchantID(),
             'PostData_' => $this->encrypt($data),
         ]));
-        var_dump((string) $response->getBody());
 
-        $result = [];
-        parse_str(trim((string) $response->getBody()), $result);
+        $body = trim((string) $response->getBody());
 
-        if (! hash_equals($result['CheckCode'], $this->checkCode($result))) {
-            throw new InvalidResponseException('Incorrect CheckCode');
+        $result = json_decode($body, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
+                throw new InvalidResponseException('Incorrect CheckCode');
+            }
+        } else {
+            $result = [];
+            parse_str(trim((string) $response->getBody()), $result);
+
+            if (! hash_equals($result['CheckCode'], $this->checkCode($result))) {
+                throw new InvalidResponseException('Incorrect CheckCode');
+            }
         }
 
         return $this->response = new VoidResponse($this, $result);

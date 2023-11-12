@@ -19,13 +19,17 @@ class VoidResponse extends AbstractResponse
         return $this->data['Message'];
     }
 
-    public function getTransactionId()
-    {
-        return $this->data["MerchantOrderNo"];
-    }
-
     public function getTransactionReference()
     {
-        return $this->data["TradeNo"];
+        return array_key_exists('Result', $this->data)
+            ? $this->data['Result']['TradeNo']
+            : $this->data['TradeNo'];
+    }
+
+    public function getTransactionId()
+    {
+        return array_key_exists('Result', $this->data)
+            ? $this->data['Result']['MerchantOrderNo']
+            : $this->data['MerchantOrderNo'];
     }
 }

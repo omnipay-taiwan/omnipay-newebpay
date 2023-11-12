@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Strict-Transport-Security: max-age=63072000
+X-Akamai-Transformed: 9 234 0 pmb=mRUM,1
+Expires: Sun, 12 Nov 2023 13:33:03 GMT
+Cache-Control: max-age=0, no-cache, no-store
+Pragma: no-cache
+Date: Sun, 12 Nov 2023 13:33:03 GMT
+Content-Length: 234
+Connection: keep-alive
+Server-Timing: cdn-cache; desc=MISS, edge; dur=55, origin; dur=51, ak_p; desc="1699795982548_1752377015_139633467_10571_2669_5_828_-";dur=1
+
+{"Status":"SUCCESS","Message":"\u653e\u68c4\u6388\u6b0a\u6210\u529f","Result":{"MerchantID":"MS127874575","Amt":30,"MerchantOrderNo":"Vanespl_ec_1641348593","TradeNo":"23111221191660146","CheckCode":"A71CAB190914DD9432C49B49AA71A5A291EFFFBFFE149417818C0E04D3BEB40B"}}
