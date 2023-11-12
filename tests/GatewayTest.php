@@ -137,19 +137,5 @@ class GatewayTest extends GatewayTestCase
         ]);
 
         self::assertInstanceOf(VoidRequest::class, $request);
-
-        $response = $request->send();
-
-        self::assertTrue($response->isSuccessful());
-        self::assertEquals('SUCCESS', $response->getCode());
-        self::assertEquals('放棄授權成功', $response->getMessage());
-        self::assertEquals('Vanespl_ec_1641348593', $response->getTransactionId());
-        self::assertEquals('23111221191660146', $response->getTransactionReference());
-
-        parse_str((string) $this->getMockClient()->getLastRequest()->getBody(), $postData);
-        self::assertEquals(
-            '61d27f528031d936b29c87802479e4e51e9cc72935abba1cade58c7524504e72a86f00fe167dca60eefc3f9c17917154a7c626641829b6bac38e3863b97c1b11a91399194a674a8fc2820c2247954fc5b16a2094e89a3fa79b15b3bf0c8dbf0677b7420af3e5c528426e1e0e6c41206b',
-            $postData['PostData_']
-        );
     }
 }

@@ -86,6 +86,7 @@ class VoidRequest extends AbstractRequest
             'MerchantID_' => $this->getMerchantID(),
             'PostData_' => $this->encrypt($data),
         ]));
+        var_dump((string) $response->getBody());
 
         $result = [];
         parse_str(trim((string) $response->getBody()), $result);
