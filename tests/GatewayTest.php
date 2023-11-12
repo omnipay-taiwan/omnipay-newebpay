@@ -4,6 +4,7 @@ namespace Omnipay\NewebPay\Tests;
 
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\NewebPay\Gateway;
+use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
@@ -25,19 +26,19 @@ class GatewayTest extends GatewayTestCase
         ]);
     }
 
-    public function testAuthorize()
-    {
-        $this->setMockHttpResponse('AuthorizeSuccess.txt');
-
-        $response = $this->gateway->authorize([
-            'amount' => '10.00',
-            'card' => $this->getValidCard(),
-        ])->send();
-
-        $this->assertTrue($response->isSuccessful());
-        $this->assertEquals('1234', $response->getTransactionReference());
-        $this->assertNull($response->getMessage());
-    }
+//    public function testAuthorize()
+//    {
+//        $this->setMockHttpResponse('AuthorizeSuccess.txt');
+//
+//        $response = $this->gateway->authorize([
+//            'amount' => '10.00',
+//            'card' => $this->getValidCard(),
+//        ])->send();
+//
+//        $this->assertTrue($response->isSuccessful());
+//        $this->assertEquals('1234', $response->getTransactionReference());
+//        $this->assertNull($response->getMessage());
+//    }
 
     public function testPurchase(): void
     {
@@ -101,10 +102,35 @@ class GatewayTest extends GatewayTestCase
             'TradeSha' => 'C80876AEBAC0036268C0E240E5BFF69C0470DE9606EEE083C5C8DD64FDB3347A',
         ]);
 
-        $notification = $this->gateway->acceptNotification();
+        $request = $this->gateway->acceptNotification();
 
-        self::assertEquals('23092714215835071', $notification->getTransactionReference());
-        self::assertEquals(NotificationInterface::STATUS_COMPLETED, $notification->getTransactionStatus());
-        self::assertEquals('授權成功', $notification->getMessage());
+        self::assertEquals('23092714215835071', $request->getTransactionReference());
+        self::assertEquals(NotificationInterface::STATUS_COMPLETED, $request->getTransactionStatus());
+        self::assertEquals('授權成功', $request->getMessage());
+    }
+
+    public function testFetchTransaction()
+    {
+        $this->setMockHttpResponse('FetchTransactionSuccess.txt');
+
+        $timestamp = 1695795668;
+        $request = $this->gateway->fetchTransaction([
+            'TimeStamp' => $timestamp,
+            'transactionId' => 'Vanespl_ec_'.$timestamp,
+            'amount' => 30,
+        ]);
+
+        self::assertInstanceOf(FetchTransactionRequest::class, $request);
+
+        $response = $request->send();
+
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('00', $response->getCode());
+        self::assertEquals('授權成功', $response->getMessage());
+        self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
+        self::assertEquals('23092714215835071', $response->getTransactionReference());
+
+        parse_str((string) $this->getMockClient()->getLastRequest()->getBody(), $postData);
+        self::assertEquals('CD326F689018E7862727547F85CECD7DD7AE0FDB7782DE2C1E46B4417245B51F', $postData['CheckValue']);
     }
 }

@@ -30,14 +30,13 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
     public function getRedirectData()
     {
         $encryptor = new Encryptor($this->request->getHashKey(), $this->request->getHashIv());
-
         $tradeInfo = $encryptor->encrypt($this->data);
 
         return [
             'MerchantID' => $this->data['MerchantID'],
             'TradeInfo' => $tradeInfo,
-            'TradeSha' => $encryptor->makeHash($tradeInfo, true),
-            'Version' => $this->request->getVersion(),
+            'TradeSha' => $encryptor->tradeSha($tradeInfo),
+            'Version' => $this->data['Version'],
         ];
     }
 }

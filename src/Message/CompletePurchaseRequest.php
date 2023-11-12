@@ -29,8 +29,9 @@ class CompletePurchaseRequest extends AbstractRequest
     protected function decrypt($data)
     {
         $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+        $tradeSha = $encryptor->tradeSha($data['TradeInfo']);
 
-        if (! $encryptor->check($data['TradeInfo'], $data['TradeSha'])) {
+        if (! hash_equals($tradeSha, $data['TradeSha'])) {
             throw new InvalidResponseException();
         }
 

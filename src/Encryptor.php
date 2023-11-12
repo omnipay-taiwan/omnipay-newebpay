@@ -16,6 +16,7 @@ class Encryptor
         $this->hashIv = $hashIv;
 
         $this->cipher = new AES('cbc');
+//        $this->cipher->disablePadding();
         $this->cipher->setKey($this->hashKey);
         $this->cipher->setIv($this->hashIv);
     }
@@ -27,10 +28,10 @@ class Encryptor
 
     public function decrypt(string $plainText): string
     {
-        return $this->cipher->decrypt(hex2bin($plainText));
+        return self::stripPadding($this->cipher->decrypt(hex2bin($plainText)));
     }
 
-    public function makeHash($data, $swap = false): string
+    public function tradeSha($data)
     {
         if (is_array($data)) {
             ksort($data);
@@ -39,20 +40,53 @@ class Encryptor
             $plainText = $data;
         }
 
-        $prefix = 'HashIV='.$this->hashIv;
-        $suffix = 'HashKey='.$this->hashKey;
-
-        if ($swap === true) {
-            $temp = $suffix;
-            $suffix = $prefix;
-            $prefix = $temp;
-        }
-
-        return strtoupper(hash("sha256", implode('&', [$prefix, $plainText, $suffix])));
+        return strtoupper(hash(
+            "sha256",
+            implode('&', ['HashKey='.$this->hashKey, $plainText, 'HashIV='.$this->hashIv])
+        ));
     }
 
-    public function check(string $data, string $hashedValue): bool
+    public function checkValue($data)
     {
-        return hash_equals($hashedValue, $this->makeHash($data, true));
+        if (is_array($data)) {
+            ksort($data);
+            $plainText = http_build_query($data);
+        } else {
+            $plainText = $data;
+        }
+
+        return strtoupper(hash(
+            "sha256",
+            implode('&', ['IV='.$this->hashIv, $plainText, 'Key='.$this->hashKey])
+        ));
+    }
+
+    public function checkCode($data)
+    {
+        if (is_array($data)) {
+            ksort($data);
+            $plainText = http_build_query($data);
+        } else {
+            $plainText = $data;
+        }
+
+        return strtoupper(hash(
+            "sha256",
+            implode('&', ['HashIV='.$this->hashIv, $plainText, 'HashKey='.$this->hashKey])
+        ));
+    }
+
+    private function stripPadding($value)
+    {
+        $pad = ord($value[($len = strlen($value)) - 1]);
+
+        return $this->paddingIsValid($pad, $value) ? substr($value, 0, $len - $pad) : $value;
+    }
+
+    private function paddingIsValid($pad, $value)
+    {
+        $beforePad = strlen($value) - $pad;
+
+        return substr($value, $beforePad) === str_repeat(substr($value, -1), $pad);
     }
 }

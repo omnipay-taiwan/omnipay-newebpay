@@ -19,68 +19,6 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
-     * 回傳格式.
-     * JSON 或是 String
-     *
-     * @param  string  $value
-     * @return static
-     */
-    public function setRespondType($value)
-    {
-        return $this->setParameter('RespondType', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getRespondType(): string
-    {
-        return $this->getParameter('RespondType') ?: "JSON";
-    }
-
-    /**
-     * 時間戳記.
-     * 自從 Unix 纪元（格林威治時間 1970 年 1 月 1 日 00:00:00）到當前時間的秒數，
-     * 若以 PHP 程式語言為例，即為呼叫 time()函式所回傳值
-     * 例：2014-05-15 15:00:00 這個時間的時間戳記為 1400137200
-     * * 須確實帶入自 Unix 紀元到當前時間的秒數以避免交易失敗。(容許誤差值 120 秒)
-     *
-     * @param  int  $value
-     * @return static
-     */
-    public function setTimeStamp($value)
-    {
-        return $this->setParameter('TimeStamp', $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getTimeStamp()
-    {
-        return $this->getParameter('TimeStamp') ?: time();
-    }
-
-    /**
-     * 串接程式版本.
-     *
-     * @param  string  $value
-     * @return static
-     */
-    public function setVersion($value)
-    {
-        return $this->setParameter('Version', $value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->getParameter('Version') ?: '2.0';
-    }
-
-    /**
      * 語系.
      * 1.設定 MPG 頁面顯示的文字語系：
      *     - 英文版 = en
@@ -102,50 +40,6 @@ class PurchaseRequest extends AbstractRequest
     public function getLangType()
     {
         return $this->getParameter('LangType');
-    }
-
-    /**
-     * 商店訂單編號.
-     * 1.商店自訂訂單編號，限英、數字、”_ ”格式 例：201406010001
-     * 2.長度限制為 30 字元
-     * 3.同一商店中此編號不可重覆
-     *
-     * @param  string  $value
-     * @return static
-     */
-    public function setMerchantOrderNo($value)
-    {
-        return $this->setTransactionId($value);
-    }
-
-    /**
-     * @return string
-     */
-    public function getMerchantOrderNo()
-    {
-        return $this->getTransactionId();
-    }
-
-    /**
-     * 訂單金額.
-     * 1.純數字不含符號，例：1000
-     * 2.幣別：新台幣
-     *
-     * @param  int  $value
-     * @return static
-     */
-    public function setAmt($value)
-    {
-        return $this->setAmount($value);
-    }
-
-    /**
-     * @return int
-     * @throws InvalidRequestException
-     */
-    public function getAmt()
-    {
-        return (int) $this->getAmount();
     }
 
     /**
@@ -1026,7 +920,7 @@ class PurchaseRequest extends AbstractRequest
             'MerchantID' => $this->getMerchantID(),
             'RespondType' => $this->getRespondType(),
             'TimeStamp' => $this->getTimeStamp(),
-            'Version' => $this->getVersion(),
+            'Version' => $this->getVersion() ?: '2.0',
             'LangType' => $this->getLangType(),
             'MerchantOrderNo' => $this->getTransactionId(),
             'Amt' => (int) $this->getAmount(),

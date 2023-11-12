@@ -32,7 +32,7 @@ class EncryptorTest extends TestCase
         $hashed = strtoupper(hash("sha256", "HashKey=".$this->key."&".$tradeInfo."&HashIV=".$this->iv));
         self::assertEquals('84E4D9F96537E029F8450BE1E759080F9AF6995921B7F6F9AAFDDD2C36E7B287', $hashed);
 
-        self::assertEquals($hashed, $encryptor->makeHash($tradeInfo, true));
+        self::assertEquals($hashed, $encryptor->tradeSha($tradeInfo));
     }
 
     public function testDecrypt(): void
@@ -55,7 +55,7 @@ class EncryptorTest extends TestCase
 
         self::assertEquals(
             '3BBBD18B6C2446E35764D587168997BF719FA72E00C569D2A55E45D67149EC71',
-            $encryptor->makeHash([
+            $encryptor->checkCode([
                 "MerchantID" => $this->mid,
                 "Amt" => '10',
                 "MerchantOrderNo" => 'MyCompanyOrder_'.$this->timestamp,
@@ -69,8 +69,8 @@ class EncryptorTest extends TestCase
         $encryptor = $this->givenEncryptor();
 
         self::assertEquals(
-            '914816C5F8DB19668860E6EB29FDE82D45134E31D9399AE8F5931865AC0972E6',
-            $encryptor->makeHash([
+            '59D3DEBBE4973B3AC2B102603DB97F0F9BE55F46B0F29FE84EF56FBCA3EBBC16',
+            $encryptor->checkValue([
                 "MerchantID" => $this->mid,
                 "Amt" => '10',
                 "MerchantOrderNo" => 'MyCompanyOrder_'.$this->timestamp,
