@@ -6,7 +6,6 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\NewebPay\Message\AcceptNotificationRequest;
-use Omnipay\NewebPay\Message\AuthorizeRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
@@ -33,14 +32,6 @@ class Gateway extends AbstractGateway
             'MerchantID' => '',
             'testMode' => false,
         ];
-    }
-
-    /**
-     * @return Message\AuthorizeRequest
-     */
-    public function authorize(array $options = [])
-    {
-        return $this->createRequest(AuthorizeRequest::class, $options);
     }
 
     public function purchase(array $options = []): RequestInterface

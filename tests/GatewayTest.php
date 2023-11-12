@@ -27,20 +27,6 @@ class GatewayTest extends GatewayTestCase
         ]);
     }
 
-//    public function testAuthorize()
-//    {
-//        $this->setMockHttpResponse('AuthorizeSuccess.txt');
-//
-//        $response = $this->gateway->authorize([
-//            'amount' => '10.00',
-//            'card' => $this->getValidCard(),
-//        ])->send();
-//
-//        $this->assertTrue($response->isSuccessful());
-//        $this->assertEquals('1234', $response->getTransactionReference());
-//        $this->assertNull($response->getMessage());
-//    }
-
     public function testPurchase(): void
     {
         $timestamp = 1699638290;
