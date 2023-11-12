@@ -62,7 +62,7 @@ class VoidRequest extends AbstractRequest
 
     public function getData()
     {
-        $data = array_filter([
+        return array_filter([
             'RespondType' => $this->getRespondType(),
             'Version' => $this->getVersion() ?: '1.0',
             'Amt' => (int) $this->getAmount(),
@@ -73,8 +73,6 @@ class VoidRequest extends AbstractRequest
         ], static function ($value) {
             return $value !== null && $value !== '';
         });
-
-        return $data;
     }
 
     /**

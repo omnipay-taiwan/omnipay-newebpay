@@ -170,6 +170,12 @@ trait HasDefaults
         $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
         $result = $encryptor->decrypt($plainText);
 
+        $data = json_decode($result, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $data;
+        }
+
         $data = [];
         parse_str($result, $data);
 

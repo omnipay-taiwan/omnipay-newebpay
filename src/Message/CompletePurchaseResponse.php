@@ -6,7 +6,7 @@ class CompletePurchaseResponse extends AbstractResponse
 {
     public function isSuccessful(): bool
     {
-        return $this->getCode() === '00';
+        return $this->getCode() === 'SUCCESS';
     }
 
     public function getMessage()
@@ -16,16 +16,20 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getCode()
     {
-        return $this->data['Result']['RespondCode'];
+        return $this->data['Status'];
     }
 
     public function getTransactionReference()
     {
-        return $this->data['Result']['TradeNo'];
+        return array_key_exists('Result', $this->data['Result'])
+            ? $this->data['Result']['Result']['TradeNo']
+            : $this->data['Result']['TradeNo'];
     }
 
     public function getTransactionId()
     {
-        return $this->data['Result']['MerchantOrderNo'];
+        return array_key_exists('Result', $this->data['Result'])
+            ? $this->data['Result']['Result']['MerchantOrderNo']
+            : $this->data['Result']['MerchantOrderNo'];
     }
 }
