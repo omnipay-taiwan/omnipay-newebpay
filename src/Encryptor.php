@@ -16,19 +16,22 @@ class Encryptor
         $this->hashIv = $hashIv;
 
         $this->cipher = new AES('cbc');
-//        $this->cipher->disablePadding();
         $this->cipher->setKey($this->hashKey);
         $this->cipher->setIv($this->hashIv);
     }
 
     public function encrypt(array $data): string
     {
+        $this->cipher->enablePadding();
+
         return bin2hex($this->cipher->encrypt(http_build_query($data)));
     }
 
     public function decrypt(string $plainText): string
     {
-        return self::stripPadding($this->cipher->decrypt(hex2bin($plainText)));
+        $this->cipher->disablePadding();
+
+        return $this->stripPadding($this->cipher->decrypt(hex2bin($plainText)));
     }
 
     public function tradeSha($data)

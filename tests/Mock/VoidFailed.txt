@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Strict-Transport-Security: max-age=63072000
+X-Akamai-Transformed: 9 234 0 pmb=mRUM,1
+Expires: Sun, 12 Nov 2023 13:33:03 GMT
+Cache-Control: max-age=0, no-cache, no-store
+Pragma: no-cache
+Date: Sun, 12 Nov 2023 13:33:03 GMT
+Content-Length: 234
+Connection: keep-alive
+Server-Timing: cdn-cache; desc=MISS, edge; dur=55, origin; dur=51, ak_p; desc="1699795982548_1752377015_139633467_10571_2669_5_828_-";dur=1
+
+Status=TRA10047&Message=該交易不為授權成功狀態，不可放棄授權&MerchantID=MS350766787&Amt=500&MerchantOrderNo=test002&TradeNo=23111221191660146&CheckCode=479CE7E56302B9E30275BD0C440AC47D4F8A519D2C893C64BC172A35A9A473B6

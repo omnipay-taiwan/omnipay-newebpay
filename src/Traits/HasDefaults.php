@@ -168,9 +168,10 @@ trait HasDefaults
     public function decrypt(string $plainText)
     {
         $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+        $result = $encryptor->decrypt($plainText);
 
         $data = [];
-        parse_str($encryptor->decrypt($plainText), $data);
+        parse_str($result, $data);
 
         return $data;
     }

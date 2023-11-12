@@ -10,6 +10,7 @@ use Omnipay\NewebPay\Message\AuthorizeRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
+use Omnipay\NewebPay\Message\VoidRequest;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
 /**
@@ -60,5 +61,10 @@ class Gateway extends AbstractGateway
     public function fetchTransaction(array $options = []): RequestInterface
     {
         return $this->createRequest(FetchTransactionRequest::class, $options);
+    }
+
+    public function void(array $options = []): RequestInterface
+    {
+        return $this->createRequest(VoidRequest::class, $options);
     }
 }
