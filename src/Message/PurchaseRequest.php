@@ -27,7 +27,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當未提供此參數或此參數數值錯誤時，將預設為繁體中文版。
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setLangType($value)
     {
@@ -50,7 +50,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.若使用特殊符號，系統將自動過濾
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setItemDesc($value)
     {
@@ -74,7 +74,7 @@ class PurchaseRequest extends AbstractRequest
      * 5.若未帶此參數，或是為 0 時，會視作為不啟用交易限制秒數
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setTradeLimit($value)
     {
@@ -98,7 +98,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.可接受最大值為 180 天
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setExpireDate($value)
     {
@@ -119,7 +119,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.此參數若為空值，則會顯示取號結果在藍新金流頁面
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setCustomerURL($value)
     {
@@ -140,7 +140,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.此參數若為空值時，則無返回鈕
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setClientBackURL($value)
     {
@@ -160,7 +160,7 @@ class PurchaseRequest extends AbstractRequest
      * 於交易完成或付款完成時，通知付款人使用
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setEmail($value)
     {
@@ -183,7 +183,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當未提供此參數時，將預設為可修改
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setEmailModify($value)
     {
@@ -204,7 +204,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 = 不須登入藍新金流會員
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setLoginType($value)
     {
@@ -225,7 +225,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.若有提供此參數，將會於 MPG 頁面呈現商店備註內容
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setOrderComment($value)
     {
@@ -247,7 +247,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setCREDIT($value)
     {
@@ -269,7 +269,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setANDROIDPAY($value)
     {
@@ -291,7 +291,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setSAMSUNGPAY($value)
     {
@@ -313,7 +313,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setLINEPAY($value)
     {
@@ -336,7 +336,7 @@ class PurchaseRequest extends AbstractRequest
      * 4. 檔案類型僅支援 jpg 或 png
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setImageUrl($value)
     {
@@ -365,7 +365,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.此欄位值=０或無值時，即代表不開啟分期
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setInstFlag($value)
     {
@@ -387,7 +387,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setCreditRed($value)
     {
@@ -409,7 +409,7 @@ class PurchaseRequest extends AbstractRequest
      *  0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setUNIONPAY($value)
     {
@@ -431,7 +431,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setCREDITAE($value)
     {
@@ -453,7 +453,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=不啟用
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setALIPAY($value)
     {
@@ -477,7 +477,7 @@ class PurchaseRequest extends AbstractRequest
      * 3.若只有啟用 WebATM，消費者於 MPG 支付頁無法點選此支付方式
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setWEBATM($value)
     {
@@ -500,7 +500,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當該筆訂單金額超過 49,999 元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setVACC($value)
     {
@@ -525,7 +525,7 @@ class PurchaseRequest extends AbstractRequest
      * 4.可指定 1 個以上的銀行，若指定 1 個以上，則用半形［,］分隔，例如：BOT, HNCB
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setBankType($value)
     {
@@ -550,7 +550,7 @@ class PurchaseRequest extends AbstractRequest
      * 仍不會顯示此支付方式選項
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setCVS($value)
     {
@@ -573,7 +573,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當該筆訂單金額小於 20 元或超過 4 萬元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setBARCODE($value)
     {
@@ -595,7 +595,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數，即代表不開啟
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setESUNWALLET($value)
     {
@@ -618,7 +618,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.當該筆訂單金額超過 49,999 元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setTAIWANPAY($value)
     {
@@ -650,7 +650,7 @@ class PurchaseRequest extends AbstractRequest
      * 5.當該筆訂單金額超過 49,999 元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setFULA($value)
     {
@@ -674,7 +674,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數，即代表不開啟
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setCVSCOM($value)
     {
@@ -696,7 +696,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數，即代表不開啟
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setEZPAY($value)
     {
@@ -718,7 +718,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數，即代表不開啟
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setEZPWECHAT($value)
     {
@@ -740,7 +740,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數，即代表不開啟
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setEZPALIPAY($value)
     {
@@ -766,7 +766,7 @@ class PurchaseRequest extends AbstractRequest
      *   c.若商店設定中，［B2C 大宗寄倉］與［C2C 店到店］皆未啟用，則支付頁面中將不會出現物流選項
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setLgsType($value)
     {
@@ -788,7 +788,7 @@ class PurchaseRequest extends AbstractRequest
      *   0 或者未有此參數=非國民旅遊卡交易
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setNTCB($value)
     {
@@ -809,7 +809,7 @@ class PurchaseRequest extends AbstractRequest
      * 例：如旅遊地區為台北市則此欄位為 001。
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setNTCBLocate($value)
     {
@@ -829,7 +829,7 @@ class PurchaseRequest extends AbstractRequest
      * 格式為：YYYY-MM-DD 例：2015-01-01
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setNTCBStartDate($value)
     {
@@ -849,7 +849,7 @@ class PurchaseRequest extends AbstractRequest
      * 格式為：YYYY-MM-DD 例：2015-01-01
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setNTCBEndDate($value)
     {
@@ -870,7 +870,7 @@ class PurchaseRequest extends AbstractRequest
      * 2.限英、數字，「.」、「_」、「@」、「-」格式。
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setTokenTerm($value)
     {
@@ -894,7 +894,7 @@ class PurchaseRequest extends AbstractRequest
      * 未有此參數或帶入其他無效參數，系統預設為參數 1。
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setTokenTermDemand($value)
     {

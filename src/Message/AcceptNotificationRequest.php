@@ -2,19 +2,13 @@
 
 namespace Omnipay\NewebPay\Message;
 
-use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
 
 class AcceptNotificationRequest extends CompletePurchaseRequest implements NotificationInterface
 {
-    /**
-     * @param  array  $data
-     * @return AcceptNotificationResponse
-     * @throws InvalidResponseException
-     */
     public function sendData($data)
     {
-        return $this->response = new AcceptNotificationResponse($this, $this->decrypt($data));
+        return $this->response = new AcceptNotificationResponse($this, $data);
     }
 
     public function getTransactionId()
@@ -38,7 +32,7 @@ class AcceptNotificationRequest extends CompletePurchaseRequest implements Notif
     }
 
     /**
-     * @return CompletePurchaseResponse
+     * @return AcceptNotificationResponse
      */
     private function getNotificationResponse()
     {

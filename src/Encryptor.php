@@ -33,47 +33,37 @@ class Encryptor
 
     public function tradeSha($data)
     {
-        if (is_array($data)) {
-            ksort($data);
-            $plainText = http_build_query($data);
-        } else {
-            $plainText = $data;
-        }
-
-        return strtoupper(hash(
-            "sha256",
-            implode('&', ['HashKey='.$this->hashKey, $plainText, 'HashIV='.$this->hashIv])
-        ));
+        return $this->makeHash([
+            'HashKey='.$this->hashKey,
+            $this->toPlainText($data),
+            'HashIV='.$this->hashIv,
+        ]);
     }
 
     public function checkValue($data)
     {
         if (is_array($data)) {
-            ksort($data);
-            $plainText = http_build_query($data);
-        } else {
-            $plainText = $data;
+            $data = self::only($data, ['MerchantID', 'Amt', 'MerchantOrderNo']);
         }
 
-        return strtoupper(hash(
-            "sha256",
-            implode('&', ['IV='.$this->hashIv, $plainText, 'Key='.$this->hashKey])
-        ));
+        return $this->makeHash([
+            'IV='.$this->hashIv,
+            $this->toPlainText($data),
+            'Key='.$this->hashKey,
+        ]);
     }
 
     public function checkCode($data)
     {
         if (is_array($data)) {
-            ksort($data);
-            $plainText = http_build_query($data);
-        } else {
-            $plainText = $data;
+            $data = self::only($data, ['MerchantID', 'Amt', 'MerchantOrderNo', 'TradeNo']);
         }
 
-        return strtoupper(hash(
-            "sha256",
-            implode('&', ['HashIV='.$this->hashIv, $plainText, 'HashKey='.$this->hashKey])
-        ));
+        return $this->makeHash([
+            'HashIV='.$this->hashIv,
+            $this->toPlainText($data),
+            'HashKey='.$this->hashKey,
+        ]);
     }
 
     private function stripPadding($value)
@@ -88,5 +78,38 @@ class Encryptor
         $beforePad = strlen($value) - $pad;
 
         return substr($value, $beforePad) === str_repeat(substr($value, -1), $pad);
+    }
+
+    /**
+     * @param  string|array  $data
+     * @return string
+     */
+    private function toPlainText($data)
+    {
+        if (! is_array($data)) {
+            $plainText = $data;
+        } else {
+            ksort($data);
+            $plainText = http_build_query($data);
+        }
+
+        return $plainText;
+    }
+
+    private function makeHash(array $data)
+    {
+        return strtoupper(hash("sha256", implode('&', $data)));
+    }
+
+    private static function only(array $array, array $keys = [])
+    {
+        $result = [];
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $array)) {
+                $result[$key] = $array[$key];
+            }
+        }
+
+        return $result;
     }
 }

@@ -3,7 +3,6 @@
 namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\NewebPay\Encryptor;
 
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
@@ -29,13 +28,12 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     public function getRedirectData()
     {
-        $encryptor = new Encryptor($this->request->getHashKey(), $this->request->getHashIv());
-        $tradeInfo = $encryptor->encrypt($this->data);
+        $tradeInfo = $this->request->encrypt($this->data);
 
         return [
             'MerchantID' => $this->data['MerchantID'],
             'TradeInfo' => $tradeInfo,
-            'TradeSha' => $encryptor->tradeSha($tradeInfo),
+            'TradeSha' => $this->request->tradeSha($tradeInfo),
             'Version' => $this->data['Version'],
         ];
     }

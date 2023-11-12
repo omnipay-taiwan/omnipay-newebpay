@@ -3,6 +3,7 @@
 namespace Omnipay\NewebPay\Traits;
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\NewebPay\Encryptor;
 
 trait HasDefaults
 {
@@ -10,9 +11,9 @@ trait HasDefaults
      * 藍新金流商店代號
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
-    public function setHashKey($value)
+    public function setHashKey(string $value)
     {
         return $this->setParameter('HashKey', $value);
     }
@@ -39,7 +40,7 @@ trait HasDefaults
      *  2.若沒有帶[Gateway]，則查詢一般商店代號。
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setMerchantID($value)
     {
@@ -55,7 +56,7 @@ trait HasDefaults
      * 串接程式版本.
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setVersion($value)
     {
@@ -75,7 +76,7 @@ trait HasDefaults
      * JSON 或是 String
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setRespondType($value)
     {
@@ -98,7 +99,7 @@ trait HasDefaults
      * * 須確實帶入自 Unix 紀元到當前時間的秒數以避免交易失敗。(容許誤差值 120 秒)
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setTimeStamp($value)
     {
@@ -120,7 +121,7 @@ trait HasDefaults
      * 3.同一商店中此編號不可重覆
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setMerchantOrderNo($value)
     {
@@ -141,7 +142,7 @@ trait HasDefaults
      * 2.幣別：新台幣
      *
      * @param  int  $value
-     * @return static
+     * @return self
      */
     public function setAmt($value)
     {
@@ -155,5 +156,43 @@ trait HasDefaults
     public function getAmt()
     {
         return (int) $this->getAmount();
+    }
+
+    public function encrypt(array $data)
+    {
+        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+
+        return $encryptor->encrypt($data);
+    }
+
+    public function decrypt(string $plainText)
+    {
+        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+
+        $data = [];
+        parse_str($encryptor->decrypt($plainText), $data);
+
+        return $data;
+    }
+
+    public function tradeSha($plainText)
+    {
+        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+
+        return $encryptor->tradeSha($plainText);
+    }
+
+    public function checkValue($data)
+    {
+        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+
+        return $encryptor->checkValue($data);
+    }
+
+    public function checkCode($data)
+    {
+        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
+
+        return $encryptor->checkCode($data);
     }
 }

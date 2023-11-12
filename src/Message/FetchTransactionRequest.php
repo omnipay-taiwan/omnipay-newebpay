@@ -4,7 +4,6 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\InvalidResponseException;
-use Omnipay\NewebPay\Encryptor;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
 class FetchTransactionRequest extends AbstractRequest
@@ -28,7 +27,7 @@ class FetchTransactionRequest extends AbstractRequest
      *   3.若沒有帶[Gateway]或是帶入其他參數值，則查詢一般商店代號。
      *
      * @param  string  $value
-     * @return static
+     * @return self
      */
     public function setGateway($value)
     {
@@ -48,17 +47,10 @@ class FetchTransactionRequest extends AbstractRequest
      */
     public function getData()
     {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        return array_filter([
+        $data = array_filter([
             'MerchantID' => $this->getMerchantID(),
             'Version' => $this->getVersion() ?: '1.3',
             'RespondType' => $this->getRespondType(),
-            'CheckValue' => $encryptor->checkValue([
-                'Amt' => (int) $this->getAmount(),
-                'MerchantID' => $this->getMerchantID(),
-                'MerchantOrderNo' => $this->getTransactionId(),
-            ]),
             'TimeStamp' => $this->getTimeStamp(),
             'MerchantOrderNo' => $this->getTransactionId(),
             'Amt' => (int) $this->getAmount(),
@@ -66,6 +58,10 @@ class FetchTransactionRequest extends AbstractRequest
         ], static function ($value) {
             return $value !== null && $value !== '';
         });
+
+        $data['CheckValue'] = $this->checkValue($data);
+
+        return $data;
     }
 
     /**
@@ -78,14 +74,7 @@ class FetchTransactionRequest extends AbstractRequest
         ], http_build_query($data));
         $result = json_decode((string) $response->getBody(), true);
 
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        if (! hash_equals($result['Result']['CheckCode'], $encryptor->checkCode([
-            'MerchantID' => $result['Result']['MerchantID'],
-            'Amt' => $result['Result']['Amt'],
-            'MerchantOrderNo' => $result['Result']['MerchantOrderNo'],
-            'TradeNo' => $result['Result']['TradeNo'],
-        ]))) {
+        if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
             throw new InvalidResponseException('Incorrect CheckCode');
         }
 
