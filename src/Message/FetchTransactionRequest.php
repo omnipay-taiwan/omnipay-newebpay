@@ -59,6 +59,7 @@ class FetchTransactionRequest extends AbstractRequest
             return $value !== null && $value !== '';
         });
 
+        var_dump($data);
         $data['CheckValue'] = $this->checkValue($data);
 
         return $data;
