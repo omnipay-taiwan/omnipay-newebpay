@@ -59,7 +59,6 @@ class FetchTransactionRequest extends AbstractRequest
             return $value !== null && $value !== '';
         });
 
-        var_dump($data);
         $data['CheckValue'] = $this->checkValue($data);
 
         return $data;
@@ -73,10 +72,22 @@ class FetchTransactionRequest extends AbstractRequest
         $response = $this->httpClient->request('POST', $this->getEndpoint(), [
             'Content-Type' => 'application/x-www-form-urlencoded',
         ], http_build_query($data));
-        $result = json_decode((string) $response->getBody(), true);
 
-        if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
-            throw new InvalidResponseException('Incorrect CheckCode');
+        $body = trim((string) $response->getBody());
+        $result = json_decode($body, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+
+            if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
+                throw new InvalidResponseException('Incorrect CheckCode');
+            }
+        } else {
+            $result = [];
+            parse_str($body, $result);
+
+            if (! hash_equals($result['CheckCode'], $this->checkCode($result))) {
+                throw new InvalidResponseException('Incorrect CheckCode');
+            }
         }
 
         return $this->response = new FetchTransactionResponse($this, $result);

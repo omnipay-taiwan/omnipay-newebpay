@@ -171,7 +171,6 @@ trait HasDefaults
         $result = $encryptor->decrypt($plainText);
 
         $data = json_decode($result, true);
-
         if (json_last_error() === JSON_ERROR_NONE) {
             return $data;
         }

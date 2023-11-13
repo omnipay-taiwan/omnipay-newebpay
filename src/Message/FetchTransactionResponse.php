@@ -6,26 +6,45 @@ class FetchTransactionResponse extends AbstractResponse
 {
     public function isSuccessful()
     {
-        return $this->getCode() === '00';
+        return (int) $this->getCode() === 1;
+    }
+
+    public function isCancelled()
+    {
+        return (int) $this->getCode() === 6;
     }
 
     public function getCode()
     {
-        return $this->data['Result']['RespondCode'];
+        return array_key_exists('Result', $this->data)
+            ? $this->data['Result']['TradeStatus']
+            : $this->data['TradeStatus'];
     }
 
     public function getMessage()
     {
-        return $this->data['Result']['RespondMsg'];
-    }
+        $lookup = [
+            0 => '未付款',
+            1 => '付款成功',
+            2 => '付款失敗',
+            3 => '取消付款',
+            6 => '退款',
+        ];
 
-    public function getTransactionId()
-    {
-        return $this->data['Result']['MerchantOrderNo'];
+        return $lookup[$this->getCode()];
     }
 
     public function getTransactionReference()
     {
-        return $this->data['Result']['TradeNo'];
+        return array_key_exists('Result', $this->data)
+            ? $this->data['Result']['TradeNo']
+            : $this->data['TradeNo'];
+    }
+
+    public function getTransactionId()
+    {
+        return array_key_exists('Result', $this->data)
+            ? $this->data['Result']['MerchantOrderNo']
+            : $this->data['MerchantOrderNo'];
     }
 }

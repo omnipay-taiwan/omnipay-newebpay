@@ -112,8 +112,8 @@ class GatewayTest extends GatewayTestCase
         $response = $request->send();
 
         self::assertTrue($response->isSuccessful());
-        self::assertEquals('00', $response->getCode());
-        self::assertEquals('授權成功', $response->getMessage());
+        self::assertEquals(1, $response->getCode());
+        self::assertEquals('付款成功', $response->getMessage());
         self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
         self::assertEquals('23092714215835071', $response->getTransactionReference());
     }
