@@ -144,7 +144,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function setClientBackURL($value)
     {
-        return $this->setParameter('ClientBackURL', $value);
+        return $this->setCancelUrl($value);
     }
 
     /**
@@ -152,7 +152,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getClientBackURL()
     {
-        return $this->getParameter('ClientBackURL');
+        return $this->getCancelUrl();
     }
 
     /**
@@ -930,7 +930,7 @@ class PurchaseRequest extends AbstractRequest
             'ReturnURL' => $this->getReturnUrl(),
             'NotifyURL' => $this->getNotifyUrl(),
             'CustomerURL' => $this->getCustomerURL(),
-            'ClientBackURL' => $this->getClientBackURL(),
+            'ClientBackURL' => $this->getCancelUrl(),
             'Email' => $this->getEmail(),
             'EmailModify' => $this->getEmailModify(),
             'LoginType' => $this->getLoginType(),
