@@ -2,6 +2,7 @@
 
 namespace Omnipay\NewebPay\Message;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
@@ -60,9 +61,13 @@ class VoidRequest extends AbstractRequest
         return $this->getParameter('IndexType') ?: 1;
     }
 
+    /**
+     * @throws InvalidRequestException
+     * @throws InvalidResponseException
+     */
     public function getData()
     {
-        return array_filter([
+        $postData = array_filter([
             'RespondType' => $this->getRespondType(),
             'Version' => $this->getVersion() ?: '1.0',
             'Amt' => (int) $this->getAmount(),
@@ -73,37 +78,25 @@ class VoidRequest extends AbstractRequest
         ], static function ($value) {
             return $value !== null && $value !== '';
         });
-    }
 
-    /**
-     * @throws InvalidResponseException
-     */
-    public function sendData($data)
-    {
         $response = $this->httpClient->request('POST', $this->getEndpoint(), [
             'Content-Type' => 'application/x-www-form-urlencoded',
         ], http_build_query([
             'MerchantID_' => $this->getMerchantID(),
-            'PostData_' => $this->encrypt($data),
+            'PostData_' => $this->encrypt($postData),
         ]));
 
-        $body = trim((string) $response->getBody());
+        $decode = $this->decodeResponse($response);
 
-        $result = json_decode($body, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
-                throw new InvalidResponseException('Incorrect CheckCode');
-            }
-        } else {
-            $result = [];
-            parse_str(trim((string) $response->getBody()), $result);
-
-            if (! hash_equals($result['CheckCode'], $this->checkCode($result))) {
-                throw new InvalidResponseException('Incorrect CheckCode');
-            }
+        if (! hash_equals($decode['CheckCode'], $this->checkCode($decode))) {
+            throw new InvalidResponseException('Incorrect CheckCode');
         }
 
-        return $this->response = new VoidResponse($this, $result);
+        return $decode;
+    }
+
+    public function sendData($data)
+    {
+        return $this->response = new VoidResponse($this, $data);
     }
 }

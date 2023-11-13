@@ -44,10 +44,11 @@ class FetchTransactionRequest extends AbstractRequest
 
     /**
      * @throws InvalidRequestException
+     * @throws InvalidResponseException
      */
     public function getData()
     {
-        $data = array_filter([
+        $postData = array_filter([
             'MerchantID' => $this->getMerchantID(),
             'Version' => $this->getVersion() ?: '1.3',
             'RespondType' => $this->getRespondType(),
@@ -59,37 +60,23 @@ class FetchTransactionRequest extends AbstractRequest
             return $value !== null && $value !== '';
         });
 
-        $data['CheckValue'] = $this->checkValue($data);
+        $postData['CheckValue'] = $this->checkValue($postData);
 
-        return $data;
-    }
-
-    /**
-     * @throws InvalidResponseException
-     */
-    public function sendData($data)
-    {
         $response = $this->httpClient->request('POST', $this->getEndpoint(), [
             'Content-Type' => 'application/x-www-form-urlencoded',
-        ], http_build_query($data));
+        ], http_build_query($postData));
 
-        $body = trim((string) $response->getBody());
-        $result = json_decode($body, true);
+        $decode = $this->decodeResponse($response);
 
-        if (json_last_error() === JSON_ERROR_NONE) {
-
-            if (! hash_equals($result['Result']['CheckCode'], $this->checkCode($result['Result']))) {
-                throw new InvalidResponseException('Incorrect CheckCode');
-            }
-        } else {
-            $result = [];
-            parse_str($body, $result);
-
-            if (! hash_equals($result['CheckCode'], $this->checkCode($result))) {
-                throw new InvalidResponseException('Incorrect CheckCode');
-            }
+        if (! hash_equals($decode['CheckCode'], $this->checkCode($decode))) {
+            throw new InvalidResponseException('Incorrect CheckCode');
         }
 
-        return $this->response = new FetchTransactionResponse($this, $result);
+        return $decode;
+    }
+
+    public function sendData($data)
+    {
+        return $this->response = new FetchTransactionResponse($this, $data);
     }
 }

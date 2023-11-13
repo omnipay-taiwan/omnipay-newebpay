@@ -21,15 +21,11 @@ class VoidResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return array_key_exists('Result', $this->data)
-            ? $this->data['Result']['TradeNo']
-            : $this->data['TradeNo'];
+        return $this->data['TradeNo'];
     }
 
     public function getTransactionId()
     {
-        return array_key_exists('Result', $this->data)
-            ? $this->data['Result']['MerchantOrderNo']
-            : $this->data['MerchantOrderNo'];
+        return $this->data['MerchantOrderNo'];
     }
 }
