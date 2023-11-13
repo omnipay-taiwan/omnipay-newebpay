@@ -16,16 +16,16 @@ class CompletePurchaseRequest extends AbstractRequest
     {
         $data = $this->httpRequest->request->all();
         $tradeSha = $this->tradeSha($data['TradeInfo']);
-        $data['Result'] = $this->decrypt($data['TradeInfo']);
         if (! hash_equals($tradeSha, $data['TradeSha'])) {
             throw new InvalidResponseException('Incorrect TradeSha');
         }
 
-        return $data;
+        return $this->decodeResponse($this->decrypt($data['TradeInfo']));
     }
 
     public function sendData($data)
     {
+
         return $this->response = new CompletePurchaseResponse($this, $data);
     }
 }

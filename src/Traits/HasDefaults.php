@@ -3,10 +3,11 @@
 namespace Omnipay\NewebPay\Traits;
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\NewebPay\Encryptor;
 
 trait HasDefaults
 {
+    use HasEncryptor;
+
     /**
      * 藍新金流商店代號
      *
@@ -158,47 +159,4 @@ trait HasDefaults
         return (int) $this->getAmount();
     }
 
-    public function encrypt(array $data)
-    {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        return $encryptor->encrypt($data);
-    }
-
-    public function decrypt(string $plainText)
-    {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-        $result = $encryptor->decrypt($plainText);
-
-        $data = json_decode($result, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $data;
-        }
-
-        $data = [];
-        parse_str($result, $data);
-
-        return $data;
-    }
-
-    public function tradeSha($plainText)
-    {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        return $encryptor->tradeSha($plainText);
-    }
-
-    public function checkValue($data)
-    {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        return $encryptor->checkValue($data);
-    }
-
-    public function checkCode($data)
-    {
-        $encryptor = new Encryptor($this->getHashKey(), $this->getHashIv());
-
-        return $encryptor->checkCode($data);
-    }
 }

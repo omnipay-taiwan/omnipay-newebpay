@@ -11,7 +11,7 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getMessage()
     {
-        return $this->data['Result']['Message'];
+        return $this->data['Message'];
     }
 
     public function getCode()
@@ -21,15 +21,11 @@ class CompletePurchaseResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return array_key_exists('Result', $this->data['Result'])
-            ? $this->data['Result']['Result']['TradeNo']
-            : $this->data['Result']['TradeNo'];
+        return $this->data['TradeNo'];
     }
 
     public function getTransactionId()
     {
-        return array_key_exists('Result', $this->data['Result'])
-            ? $this->data['Result']['Result']['MerchantOrderNo']
-            : $this->data['Result']['MerchantOrderNo'];
+        return $this->data['MerchantOrderNo'];
     }
 }
