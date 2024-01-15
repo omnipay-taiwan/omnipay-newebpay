@@ -89,7 +89,7 @@ trait HasDefaults
      */
     public function getRespondType(): string
     {
-        return $this->getParameter('RespondType') ?: "JSON";
+        return $this->getParameter('RespondType') ?: 'JSON';
     }
 
     /**
@@ -158,5 +158,4 @@ trait HasDefaults
     {
         return (int) $this->getAmount();
     }
-
 }

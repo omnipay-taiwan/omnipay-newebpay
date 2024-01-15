@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Strict-Transport-Security: max-age=63072000
+X-Akamai-Transformed: 9 234 0 pmb=mRUM,1
+Expires: Sun, 12 Nov 2023 13:33:03 GMT
+Cache-Control: max-age=0, no-cache, no-store
+Pragma: no-cache
+Date: Sun, 12 Nov 2023 13:33:03 GMT
+Content-Length: 234
+Connection: keep-alive
+Server-Timing: cdn-cache; desc=MISS, edge; dur=55, origin; dur=51, ak_p; desc="1699795982548_1752377015_139633467_10571_2669_5_828_-";dur=1
+
+Status=TRA10035&Message=該交易非授權成功或已請款完成狀態，請確認&MerchantID=MS127874575&Amt=100&MerchantOrderNo=Vanespl_ec_1641348593&TradeNo=23111221191660146

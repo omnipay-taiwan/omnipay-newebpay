@@ -97,6 +97,6 @@ class VoidRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        return $this->response = new VoidResponse($this, $data);
+        return $this->response = new VoidOrRefundResponse($this, $data);
     }
 }

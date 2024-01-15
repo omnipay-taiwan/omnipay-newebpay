@@ -2,7 +2,7 @@
 
 namespace Omnipay\NewebPay\Message;
 
-class VoidResponse extends AbstractResponse
+class VoidOrRefundResponse extends AbstractResponse
 {
     public function isSuccessful()
     {

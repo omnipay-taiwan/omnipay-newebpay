@@ -5,6 +5,7 @@ namespace Omnipay\NewebPay\Tests;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\NewebPay\Gateway;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
+use Omnipay\NewebPay\Message\RefundRequest;
 use Omnipay\NewebPay\Message\VoidRequest;
 use Omnipay\Tests\GatewayTestCase;
 
@@ -134,5 +135,22 @@ class GatewayTest extends GatewayTestCase
         ]);
 
         self::assertInstanceOf(VoidRequest::class, $request);
+    }
+
+    public function testRefund()
+    {
+        $this->setMockHttpResponse('RefundSuccess.txt');
+
+        $timestamp = 1641348593;
+        $request = $this->gateway->refund([
+            'RespondType' => 'String',
+            'Version' => '1.0',
+            'TimeStamp' => $timestamp,
+            'Amt' => '100',
+            'MerchantOrderNo' => 'Vanespl_ec_'.$timestamp,
+            'TradeNo' => '23111221191660146',
+        ]);
+
+        self::assertInstanceOf(RefundRequest::class, $request);
     }
 }

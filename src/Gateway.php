@@ -9,6 +9,7 @@ use Omnipay\NewebPay\Message\AcceptNotificationRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
+use Omnipay\NewebPay\Message\RefundRequest;
 use Omnipay\NewebPay\Message\VoidRequest;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
@@ -57,5 +58,10 @@ class Gateway extends AbstractGateway
     public function void(array $options = []): RequestInterface
     {
         return $this->createRequest(VoidRequest::class, $options);
+    }
+
+    public function refund(array $options = []): RequestInterface
+    {
+        return $this->createRequest(RefundRequest::class, $options);
     }
 }
