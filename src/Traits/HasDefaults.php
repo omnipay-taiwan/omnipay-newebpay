@@ -11,7 +11,6 @@ trait HasDefaults
     /**
      * 藍新金流商店代號
      *
-     * @param  string  $value
      * @return self
      */
     public function setHashKey(string $value)
@@ -84,9 +83,6 @@ trait HasDefaults
         return $this->setParameter('RespondType', $value);
     }
 
-    /**
-     * @return string
-     */
     public function getRespondType(): string
     {
         return $this->getParameter('RespondType') ?: 'JSON';
@@ -152,6 +148,7 @@ trait HasDefaults
 
     /**
      * @return int
+     *
      * @throws InvalidRequestException
      */
     public function getAmt()

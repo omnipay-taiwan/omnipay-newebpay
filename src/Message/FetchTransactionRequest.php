@@ -10,13 +10,9 @@ class FetchTransactionRequest extends AbstractRequest
 {
     use HasDefaults;
 
-    protected $liveEndpoint = 'https://core.newebpay.com/API/QueryTradeInfo';
-
-    protected $testEndpoint = 'https://ccore.newebpay.com/API/QueryTradeInfo';
-
     public function getEndpoint()
     {
-        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+        return parent::getEndpoint().'API/QueryTradeInfo';
     }
 
     /**

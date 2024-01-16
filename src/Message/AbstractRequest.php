@@ -10,6 +10,15 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class AbstractRequest extends BaseAbstractRequest
 {
+    protected $liveEndpoint = 'https://core.newebpay.com/';
+
+    protected $testEndpoint = 'https://ccore.newebpay.com/';
+
+    public function getEndpoint()
+    {
+        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+    }
+
     /**
      * @param  ResponseInterface|string  $response
      * @return array

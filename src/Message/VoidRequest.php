@@ -10,13 +10,9 @@ class VoidRequest extends AbstractRequest
 {
     use HasDefaults;
 
-    protected $liveEndpoint = 'https://core.newebpay.com/API/CreditCard/Cancel';
-
-    protected $testEndpoint = 'https://ccore.newebpay.com/API/CreditCard/Cancel';
-
     public function getEndpoint()
     {
-        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+        return parent::getEndpoint().'API/CreditCard/Cancel';
     }
 
     /**

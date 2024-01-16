@@ -9,13 +9,9 @@ class RefundRequest extends AbstractRequest
 {
     use HasDefaults;
 
-    protected $liveEndpoint = 'https://ccore.newebpay.com/API/CreditCard/Close';
-
-    protected $testEndpoint = 'https://ccore.newebpay.com/API/CreditCard/Close';
-
     public function getEndpoint()
     {
-        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+        return parent::getEndpoint().'API/CreditCard/Close';
     }
 
     /**

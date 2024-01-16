@@ -24,7 +24,7 @@ class VoidRequestTest extends TestCase
             'Version' => '1.0',
             'TimeStamp' => $timestamp,
             'Amt' => '30',
-            'MerchantOrderNo' => "Vanespl_ec_".$timestamp,
+            'MerchantOrderNo' => 'Vanespl_ec_'.$timestamp,
             'IndexType' => '1',
             'PayerEmail' => 'tek.chen@ezpay.com.tw',
         ]));
@@ -41,6 +41,10 @@ class VoidRequestTest extends TestCase
         self::assertEquals(
             '61d27f528031d936b29c87802479e4e51e9cc72935abba1cade58c7524504e72a86f00fe167dca60eefc3f9c17917154a7c626641829b6bac38e3863b97c1b11a91399194a674a8fc2820c2247954fc5b16a2094e89a3fa79b15b3bf0c8dbf0677b7420af3e5c528426e1e0e6c41206b',
             $postData['PostData_']
+        );
+        self::assertEquals(
+            'https://ccore.newebpay.com/API/CreditCard/Cancel',
+            (string) $this->getMockClient()->getLastRequest()->getUri()
         );
     }
 
@@ -61,7 +65,7 @@ class VoidRequestTest extends TestCase
             'Version' => '1.0',
             'TimeStamp' => $timestamp,
             'Amt' => '30',
-            'MerchantOrderNo' => "Vanespl_ec_".$timestamp,
+            'MerchantOrderNo' => 'Vanespl_ec_'.$timestamp,
             'IndexType' => '1',
             'PayerEmail' => 'tek.chen@ezpay.com.tw',
         ]));

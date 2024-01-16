@@ -33,6 +33,11 @@ class FetchTransactionRequestTest extends TestCase
         self::assertEquals('付款成功', $response->getMessage());
         self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
         self::assertEquals('23092714215835071', $response->getTransactionReference());
+
+        self::assertEquals(
+            'https://ccore.newebpay.com/API/QueryTradeInfo',
+            (string) $this->getMockClient()->getLastRequest()->getUri()
+        );
     }
 
     public function testSendDataForJSON(): void
