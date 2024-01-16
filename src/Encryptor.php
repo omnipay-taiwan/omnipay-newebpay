@@ -7,7 +7,9 @@ use phpseclib3\Crypt\AES;
 class Encryptor
 {
     private $cipher;
+
     private $hashKey;
+
     private $hashIv;
 
     public function __construct(string $hashKey, string $hashIv)
@@ -101,7 +103,7 @@ class Encryptor
 
     private function makeHash(array $data)
     {
-        return strtoupper(hash("sha256", implode('&', $data)));
+        return strtoupper(hash('sha256', implode('&', $data)));
     }
 
     private static function only(array $array, array $keys = [])

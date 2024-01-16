@@ -9,13 +9,9 @@ class PurchaseRequest extends AbstractRequest
 {
     use HasDefaults;
 
-    protected $liveEndpoint = 'https://core.newebpay.com/MPG/mpg_gateway';
-
-    protected $testEndpoint = 'https://ccore.newebpay.com/MPG/mpg_gateway';
-
     public function getEndpoint()
     {
-        return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+        return parent::getEndpoint().'MPG/mpg_gateway';
     }
 
     /**

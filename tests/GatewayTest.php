@@ -13,6 +13,7 @@ class GatewayTest extends GatewayTestCase
 {
     /** @var Gateway */
     protected $gateway;
+
     protected $options;
 
     public function setUp(): void
@@ -31,7 +32,7 @@ class GatewayTest extends GatewayTestCase
     public function testPurchase(): void
     {
         $timestamp = 1699638290;
-        $orderNo = "test0315001";
+        $orderNo = 'test0315001';
 
         $response = $this->gateway->purchase([
             'transactionId' => $orderNo,
@@ -129,7 +130,7 @@ class GatewayTest extends GatewayTestCase
             'Version' => '1.0',
             'TimeStamp' => $timestamp,
             'Amt' => '30',
-            'MerchantOrderNo' => "Vanespl_ec_".$timestamp,
+            'MerchantOrderNo' => 'Vanespl_ec_'.$timestamp,
             'IndexType' => '1',
             'PayerEmail' => 'tek.chen@ezpay.com.tw',
         ]);
