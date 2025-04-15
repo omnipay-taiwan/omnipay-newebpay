@@ -905,6 +905,19 @@ class PurchaseRequest extends AbstractRequest
         return $this->getParameter('TokenTermDemand');
     }
 
+    public function setPaymentInfoUrl($value)
+    {
+        return $this->setCustomerURL($value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPaymentInfoUrl()
+    {
+        return $this->getCustomerURL();
+    }
+
     /**
      * @throws InvalidRequestException
      */

@@ -5,6 +5,7 @@ namespace Omnipay\NewebPay\Tests;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\NewebPay\Gateway;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
+use Omnipay\NewebPay\Message\GetPaymentInfoRequest;
 use Omnipay\NewebPay\Message\RefundRequest;
 use Omnipay\NewebPay\Message\VoidRequest;
 use Omnipay\Tests\GatewayTestCase;
@@ -118,6 +119,13 @@ class GatewayTest extends GatewayTestCase
         self::assertEquals('付款成功', $response->getMessage());
         self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
         self::assertEquals('23092714215835071', $response->getTransactionReference());
+    }
+
+    public function testGetPaymentInfo()
+    {
+        $request = $this->gateway->getPaymentInfo([]);
+
+        self::assertInstanceOf(GetPaymentInfoRequest::class, $request);
     }
 
     public function testVoid()
