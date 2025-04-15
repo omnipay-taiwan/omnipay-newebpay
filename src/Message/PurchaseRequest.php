@@ -4,10 +4,12 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\NewebPay\Traits\HasDefaults;
+use Omnipay\NewebPay\Traits\HasPaymentInfo;
 
 class PurchaseRequest extends AbstractRequest
 {
     use HasDefaults;
+    use HasPaymentInfo;
 
     public function getEndpoint()
     {
@@ -119,7 +121,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function setCustomerURL($value)
     {
-        return $this->setParameter('CustomerURL', $value);
+        return $this->setPaymentInfoUrl($value);
     }
 
     /**
@@ -127,7 +129,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getCustomerURL()
     {
-        return $this->getParameter('CustomerURL');
+        return $this->getPaymentInfoUrl();
     }
 
     /**
@@ -905,19 +907,6 @@ class PurchaseRequest extends AbstractRequest
         return $this->getParameter('TokenTermDemand');
     }
 
-    public function setPaymentInfoUrl($value)
-    {
-        return $this->setCustomerURL($value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getPaymentInfoUrl()
-    {
-        return $this->getCustomerURL();
-    }
-
     /**
      * @throws InvalidRequestException
      */
@@ -938,7 +927,7 @@ class PurchaseRequest extends AbstractRequest
             'ExpireDate' => $this->getExpireDate(),
             'ReturnURL' => $this->getReturnUrl(),
             'NotifyURL' => $this->getNotifyUrl(),
-            'CustomerURL' => $this->getCustomerURL(),
+            'CustomerURL' => $this->getPaymentInfoUrl(),
             'ClientBackURL' => $this->getCancelUrl(),
             'Email' => $this->getEmail(),
             'EmailModify' => $this->getEmailModify(),
