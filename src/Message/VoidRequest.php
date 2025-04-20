@@ -83,8 +83,7 @@ class VoidRequest extends AbstractRequest
         ]));
 
         $decode = $this->decodeResponse($response);
-
-        if (! hash_equals($decode['CheckCode'], $this->checkCode($decode))) {
+        if (! hash_equals($this->checkCode($decode), $decode['CheckCode'] ?? '')) {
             throw new InvalidResponseException('Incorrect CheckCode');
         }
 

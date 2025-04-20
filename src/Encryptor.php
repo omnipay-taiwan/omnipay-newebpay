@@ -64,11 +64,7 @@ class Encryptor
             $data = self::only($data, ['MerchantID', 'Amt', 'MerchantOrderNo', 'TradeNo']);
         }
 
-        return $this->makeHash([
-            'HashIV='.$this->hashIv,
-            $this->toPlainText($data),
-            'HashKey='.$this->hashKey,
-        ]);
+        return $this->makeHash(['HashIV='.$this->hashIv, $this->toPlainText($data), 'HashKey='.$this->hashKey]);
     }
 
     private function stripPadding($value)

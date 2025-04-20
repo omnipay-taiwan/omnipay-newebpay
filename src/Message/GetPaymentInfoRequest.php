@@ -2,7 +2,7 @@
 
 namespace Omnipay\NewebPay\Message;
 
-use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\NewebPay\Traits\HasDefaults;
 
 class GetPaymentInfoRequest extends AbstractRequest
@@ -10,17 +10,16 @@ class GetPaymentInfoRequest extends AbstractRequest
     use HasDefaults;
 
     /**
-     * @throws InvalidResponseException
+     * @throws InvalidRequestException
      */
     public function getData()
     {
-        $data = $this->httpRequest->request->all();
-        $tradeSha = $this->tradeSha($data['TradeInfo']);
-        if (! hash_equals($tradeSha, $data['TradeSha'])) {
-            throw new InvalidResponseException('Incorrect TradeSha');
+        $tradeInfo = $this->httpRequest->request->get('TradeInfo');
+        if (! hash_equals($this->tradeSha($tradeInfo), $this->httpRequest->get('TradeSha', ''))) {
+            throw new InvalidRequestException('Incorrect TradeSha');
         }
 
-        return $this->decodeResponse($this->decrypt($data['TradeInfo']));
+        return $this->decodeResponse($this->decrypt($tradeInfo));
     }
 
     public function sendData($data)
