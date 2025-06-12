@@ -24,7 +24,6 @@ class CompletePurchaseRequest extends AbstractRequest
 
     public function sendData($data)
     {
-
         return $this->response = new CompletePurchaseResponse($this, $data);
     }
 }

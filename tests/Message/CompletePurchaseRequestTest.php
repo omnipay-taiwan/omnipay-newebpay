@@ -134,4 +134,49 @@ class CompletePurchaseRequestTest extends TestCase
         self::assertEquals('23092714215835071', $response->getTransactionReference());
         self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
     }
+
+    public function testGetCvsData()
+    {
+        $this->getHttpRequest()->request->add([
+            'Status' => 'SUCCESS',
+            'MerchantID' => 'MS127874575',
+            'Version' => '2.0',
+            'TradeInfo' => 'ee11d1501e6dc8433c75988258f2343d8116f6e654687b266eec755c14f1d6a17d71af9ba81deb40cb07e8b1a7e83eca3d6005234823bf1fbfda67e48d571b78c991b30a506905d97ea1d37f8255722926e664f43373a577dd232f7201af796d50de485621534b6feae40cfc346378f1037b3bc91b26a21a1cdd0723d00781cf5ea66e802fdef6060ac8a9797f0eeadf613233d6d04c20f97bcd94359243b42a59bed19994e6fd5ceb38525b680374e9be12e5cab6cc30e42c757406a91e9a9fbb25fd5c4d78a13ed6621fd8c3276a24cea30bd04fabd600af9e210369765ed2c2e3e5b3a6eaab15d7a21bc39805e1d99a17573e6545df66854634b8a0ca48bed145cd23d308c4b1d3b757e2d2429bfc4ae00318fcbc2abc6f6966f9adb6287115fbb666f7a64327b8a005d5941b4cf6',
+            'TradeSha' => 'CBAE57E24870134073AC83752258CAA85EE9A8422F4FB1CC55CAEFA334D34C03',
+        ]);
+        $request = new CompletePurchaseRequest($this->getHttpClient(), $this->getHttpRequest());
+        $request->initialize([
+            'HashKey' => 'Fs5cX1TGqYM2PpdbE14a9H83YQSQF5jn',
+            'HashIV' => 'C6AcmfqJILwgnhIP',
+            'MerchantID' => 'MS127874575',
+            'testMode' => true,
+        ]);
+
+        $data = $request->getData();
+
+        self::assertEquals([
+            'Status' => 'SUCCESS',
+            'Message' => '付款成功',
+            'MerchantID' => 'MS127874575',
+            'Amt' => 100,
+            'TradeNo' => '23092714215835071',
+            'MerchantOrderNo' => 'Vanespl_ec_1695795668',
+            'RespondType' => 'JSON',
+            'IP' => '123.51.237.115',
+            'EscrowBank' => 'HNCB',
+            'PaymentType' => 'CVS',
+            'CodeNo' => 'CVS00000000001',
+            'StoreType' => '1',
+            'StoreID' => '941198',
+            'PayTime' => '2023-09-27 14:21:59',
+        ], $data);
+
+        $response = $request->send();
+
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('付款成功', $response->getMessage());
+        self::assertEquals('SUCCESS', $response->getCode());
+        self::assertEquals('23092714215835071', $response->getTransactionReference());
+        self::assertEquals('Vanespl_ec_1695795668', $response->getTransactionId());
+    }
 }
