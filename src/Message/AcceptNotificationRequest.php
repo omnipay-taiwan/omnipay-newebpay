@@ -11,6 +11,16 @@ class AcceptNotificationRequest extends CompletePurchaseRequest implements Notif
         return $this->response = new AcceptNotificationResponse($this, $data);
     }
 
+    /**
+     * 判斷是否為定期定額通知.
+     *
+     * @return bool
+     */
+    protected function isPeriod(): bool
+    {
+        return $this->httpRequest->request->has('Period');
+    }
+
     public function getTransactionId()
     {
         return $this->getNotificationResponse()->getTransactionId();

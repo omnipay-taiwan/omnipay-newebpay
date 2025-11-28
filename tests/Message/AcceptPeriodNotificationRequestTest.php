@@ -3,7 +3,7 @@
 namespace Omnipay\NewebPay\Tests\Message;
 
 use Omnipay\Common\Message\NotificationInterface;
-use Omnipay\NewebPay\Message\AcceptPeriodNotificationRequest;
+use Omnipay\NewebPay\Message\AcceptNotificationRequest;
 use Omnipay\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,7 +24,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
     public function testGetTransactionStatus(): void
     {
         $httpRequest = Request::create('/', 'POST', ['Period' => $this->encryptedPeriod]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
@@ -37,7 +37,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
     public function testGetTransactionReference(): void
     {
         $httpRequest = Request::create('/', 'POST', ['Period' => $this->encryptedPeriod]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
@@ -50,7 +50,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
     public function testGetTransactionId(): void
     {
         $httpRequest = Request::create('/', 'POST', ['Period' => $this->encryptedPeriod]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
@@ -63,7 +63,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
     public function testGetMessage(): void
     {
         $httpRequest = Request::create('/', 'POST', ['Period' => $this->encryptedPeriod]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
@@ -76,7 +76,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
     public function testSendReturnsAcceptPeriodNotificationResponse(): void
     {
         $httpRequest = Request::create('/', 'POST', ['Period' => $this->encryptedPeriod]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
@@ -111,7 +111,7 @@ class AcceptPeriodNotificationRequestTest extends TestCase
         ]);
 
         $httpRequest = Request::create('/', 'POST', ['Period' => $failedData]);
-        $request = new AcceptPeriodNotificationRequest($this->getHttpClient(), $httpRequest);
+        $request = new AcceptNotificationRequest($this->getHttpClient(), $httpRequest);
         $request->initialize([
             'HashKey' => $this->hashKey,
             'HashIV' => $this->hashIV,
