@@ -28,6 +28,13 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
 
     public function getRedirectData()
     {
+        if ($this->isPeriod()) {
+            return [
+                'MerchantID_' => $this->data['MerchantID'],
+                'PostData_' => $this->request->encrypt($this->data),
+            ];
+        }
+
         $tradeInfo = $this->request->encrypt($this->data);
 
         return [
@@ -36,5 +43,10 @@ class PurchaseResponse extends AbstractResponse implements RedirectResponseInter
             'TradeSha' => $this->request->tradeSha($tradeInfo),
             'Version' => $this->data['Version'],
         ];
+    }
+
+    protected function isPeriod(): bool
+    {
+        return $this->request->isPeriod();
     }
 }

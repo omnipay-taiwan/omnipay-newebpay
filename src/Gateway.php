@@ -11,7 +11,6 @@ use Omnipay\NewebPay\Message\AlterPeriodAmtRequest;
 use Omnipay\NewebPay\Message\AlterPeriodStatusRequest;
 use Omnipay\NewebPay\Message\CompletePeriodRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
-use Omnipay\NewebPay\Message\CreatePeriodRequest;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\NewebPay\Message\GetPaymentInfoRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
@@ -74,11 +73,6 @@ class Gateway extends AbstractGateway
     public function refund(array $options = []): RequestInterface
     {
         return $this->createRequest(RefundRequest::class, $options);
-    }
-
-    public function createPeriod(array $options = []): RequestInterface
-    {
-        return $this->createRequest(CreatePeriodRequest::class, $options);
     }
 
     public function completePeriod(array $options = []): RequestInterface

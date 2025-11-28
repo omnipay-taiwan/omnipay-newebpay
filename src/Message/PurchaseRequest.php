@@ -12,6 +12,7 @@ use Omnipay\NewebPay\Traits\HasLogistics;
 use Omnipay\NewebPay\Traits\HasMobilePay;
 use Omnipay\NewebPay\Traits\HasOrderDetail;
 use Omnipay\NewebPay\Traits\HasPaymentInfo;
+use Omnipay\NewebPay\Traits\HasPeriod;
 
 class PurchaseRequest extends AbstractRequest
 {
@@ -24,10 +25,23 @@ class PurchaseRequest extends AbstractRequest
     use HasEWallet;
     use HasLogistics;
     use HasOrderDetail;
+    use HasPeriod;
+
+    /**
+     * 判斷是否為定期定額請求.
+     *
+     * @return bool
+     */
+    public function isPeriod(): bool
+    {
+        return $this->getPeriodType() !== null;
+    }
 
     public function getEndpoint()
     {
-        return parent::getEndpoint().'MPG/mpg_gateway';
+        return $this->isPeriod()
+            ? parent::getEndpoint().'MPG/period'
+            : parent::getEndpoint().'MPG/mpg_gateway';
     }
 
     /**
@@ -214,25 +228,90 @@ class PurchaseRequest extends AbstractRequest
     {
         $this->validate('transactionId', 'amount', 'description');
 
-        return array_filter([
+        $isPeriod = $this->isPeriod();
+
+        if ($isPeriod) {
+            // 定期定額額外必填驗證
+            $this->validate('PeriodType', 'PeriodPoint', 'PeriodStartType', 'PeriodTimes', 'PayerEmail');
+        }
+
+        $data = array_merge(
+            $this->getBaseData($isPeriod),
+            $isPeriod ? $this->getPeriodData() : $this->getPaymentMethodData()
+        );
+
+        return array_filter($data, static function ($value) {
+            return $value !== null && $value !== '';
+        });
+    }
+
+    /**
+     * 取得基本參數.
+     *
+     * @param  bool  $isPeriod
+     * @return array
+     */
+    protected function getBaseData(bool $isPeriod): array
+    {
+        return [
             // 基本參數
             'MerchantID' => $this->getMerchantID(),
             'RespondType' => $this->getRespondType(),
             'TimeStamp' => $this->getTimeStamp(),
-            'Version' => $this->getVersion() ?: '2.3',
+            'Version' => $this->getVersion() ?: ($isPeriod ? '1.5' : '2.3'),
             'LangType' => $this->getLangType(),
-            'MerchantOrderNo' => $this->getTransactionId(),
-            'Amt' => (int) $this->getAmount(),
-            'ItemDesc' => $this->getDescription(),
-            'TradeLimit' => $this->getTradeLimit(),
+
+            // 訂單編號 (根據類型使用不同欄位名稱)
+            ($isPeriod ? 'MerOrderNo' : 'MerchantOrderNo') => $this->getTransactionId(),
+
+            // 金額 (根據類型使用不同欄位名稱)
+            ($isPeriod ? 'PeriodAmt' : 'Amt') => (int) $this->getAmount(),
+
+            // 商品描述 (根據類型使用不同欄位名稱)
+            ($isPeriod ? 'ProdDesc' : 'ItemDesc') => $this->getDescription(),
+
+            // 共用參數
             'ExpireDate' => $this->getExpireDate(),
-            'ExpireTime' => $this->getExpireTime(),
             'ReturnURL' => $this->getReturnUrl(),
             'NotifyURL' => $this->getNotifyUrl(),
-            'CustomerURL' => $this->getPaymentInfoUrl(),
-            'ClientBackURL' => $this->getCancelUrl(),
-            'Email' => $this->getEmail(),
+            ($isPeriod ? 'BackURL' : 'ClientBackURL') => $this->getCancelUrl(),
+            ($isPeriod ? 'PayerEmail' : 'Email') => $isPeriod ? $this->getPayerEmail() : $this->getEmail(),
             'EmailModify' => $this->getEmailModify(),
+            'UNIONPAY' => $this->getUNIONPAY(),
+        ];
+    }
+
+    /**
+     * 取得定期定額專用參數.
+     *
+     * @return array
+     */
+    protected function getPeriodData(): array
+    {
+        return [
+            'PeriodType' => $this->getPeriodType(),
+            'PeriodPoint' => $this->getPeriodPoint(),
+            'PeriodStartType' => $this->getPeriodStartType(),
+            'PeriodTimes' => $this->getPeriodTimes(),
+            'PeriodFirstdate' => $this->getPeriodFirstdate(),
+            'PeriodMemo' => $this->getPeriodMemo(),
+            'PaymentInfo' => $this->getPaymentInfo(),
+            'OrderInfo' => $this->getOrderInfo(),
+        ];
+    }
+
+    /**
+     * 取得一般交易支付方式參數.
+     *
+     * @return array
+     */
+    protected function getPaymentMethodData(): array
+    {
+        return [
+            // 一般交易參數
+            'TradeLimit' => $this->getTradeLimit(),
+            'ExpireTime' => $this->getExpireTime(),
+            'CustomerURL' => $this->getPaymentInfoUrl(),
             'OrderComment' => $this->getOrderComment(),
             'OrderDetail' => $this->getOrderDetail(),
 
@@ -240,7 +319,6 @@ class PurchaseRequest extends AbstractRequest
             'CREDIT' => $this->getCREDIT(),
             'InstFlag' => $this->getInstFlag(),
             'CreditRed' => $this->getCreditRed(),
-            'UNIONPAY' => $this->getUNIONPAY(),
             'CREDITAE' => $this->getCREDITAE(),
             'TokenTerm' => $this->getTokenTerm(),
             'TokenTermDemand' => $this->getTokenTermDemand(),
@@ -281,12 +359,10 @@ class PurchaseRequest extends AbstractRequest
             // 物流 (HasLogistics)
             'CVSCOM' => $this->getCVSCOM(),
             'LgsType' => $this->getLgsType(),
-        ], static function ($value) {
-            return $value !== null && $value !== '';
-        });
+        ];
     }
 
-    public function sendData($data): PurchaseResponse
+    public function sendData($data)
     {
         return $this->response = new PurchaseResponse($this, $data);
     }
