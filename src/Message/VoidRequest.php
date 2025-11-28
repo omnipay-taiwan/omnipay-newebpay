@@ -75,12 +75,12 @@ class VoidRequest extends AbstractRequest
             return $value !== null && $value !== '';
         });
 
-        $response = $this->httpClient->request('POST', $this->getEndpoint(), [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ], http_build_query([
-            'MerchantID_' => $this->getMerchantID(),
-            'PostData_' => $this->encrypt($postData),
-        ]));
+        $response = $this->sendEncryptedRequest(
+            $this->httpClient,
+            $this->getEndpoint(),
+            $this->getMerchantID(),
+            $postData
+        );
 
         $decode = $this->decodeResponse($response);
         if (! hash_equals($this->checkCode($decode), $decode['CheckCode'] ?? '')) {

@@ -4,52 +4,16 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\NewebPay\Traits\HasDefaults;
+use Omnipay\NewebPay\Traits\HasPeriod;
 
 class AlterPeriodAmtRequest extends AbstractRequest
 {
     use HasDefaults;
+    use HasPeriod;
 
     public function getEndpoint()
     {
         return parent::getEndpoint().'MPG/period/AlterAmt';
-    }
-
-    /**
-     * 商店訂單編號.
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setMerOrderNo($value)
-    {
-        return $this->setTransactionId($value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getMerOrderNo()
-    {
-        return $this->getTransactionId();
-    }
-
-    /**
-     * 委託單號.
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setPeriodNo($value)
-    {
-        return $this->setParameter('PeriodNo', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getPeriodNo()
-    {
-        return $this->getParameter('PeriodNo');
     }
 
     /**
@@ -69,67 +33,6 @@ class AlterPeriodAmtRequest extends AbstractRequest
     public function getAlterAmt()
     {
         return $this->getParameter('AlterAmt');
-    }
-
-    /**
-     * 週期類別.
-     * D=固定天期制
-     * W=每週
-     * M=每月
-     * Y=每年
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setPeriodType($value)
-    {
-        return $this->setParameter('PeriodType', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getPeriodType()
-    {
-        return $this->getParameter('PeriodType');
-    }
-
-    /**
-     * 交易週期授權時間.
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setPeriodPoint($value)
-    {
-        return $this->setParameter('PeriodPoint', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getPeriodPoint()
-    {
-        return $this->getParameter('PeriodPoint');
-    }
-
-    /**
-     * 授權期數.
-     *
-     * @param  int  $value
-     * @return self
-     */
-    public function setPeriodTimes($value)
-    {
-        return $this->setParameter('PeriodTimes', $value);
-    }
-
-    /**
-     * @return ?int
-     */
-    public function getPeriodTimes()
-    {
-        return $this->getParameter('PeriodTimes');
     }
 
     /**
@@ -197,36 +100,13 @@ class AlterPeriodAmtRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $response = $this->httpClient->request('POST', $this->getEndpoint(), [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ], http_build_query([
-            'MerchantID_' => $this->getMerchantID(),
-            'PostData_' => $this->encrypt($data),
-        ]));
+        $response = $this->sendEncryptedRequest(
+            $this->httpClient,
+            $this->getEndpoint(),
+            $this->getMerchantID(),
+            $data
+        );
 
-        return $this->response = new AlterPeriodAmtResponse($this, $this->decodeResponse($response));
-    }
-
-    /**
-     * @return array
-     */
-    protected function decodeResponse($response)
-    {
-        $responseText = trim((string) $response->getBody());
-        parse_str($responseText, $result);
-
-        if (isset($result['period'])) {
-            $decrypted = $this->decrypt($result['period']);
-            $data = json_decode($decrypted, true);
-
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return array_merge(
-                    ['Status' => $data['Status'], 'Message' => $data['Message']],
-                    $data['Result'] ?? []
-                );
-            }
-        }
-
-        return $result;
+        return $this->response = new AlterPeriodAmtResponse($this, $this->decodePeriodResponse($response));
     }
 }

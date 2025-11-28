@@ -114,12 +114,13 @@ class RefundRequest extends AbstractRequest
         ], static function ($value) {
             return $value !== null && $value !== '';
         });
-        $response = $this->httpClient->request('POST', $this->getEndpoint(), [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ], http_build_query([
-            'MerchantID_' => $this->getMerchantID(),
-            'PostData_' => $this->encrypt($postData),
-        ]));
+
+        $response = $this->sendEncryptedRequest(
+            $this->httpClient,
+            $this->getEndpoint(),
+            $this->getMerchantID(),
+            $postData
+        );
 
         return $this->decodeResponse($response);
     }

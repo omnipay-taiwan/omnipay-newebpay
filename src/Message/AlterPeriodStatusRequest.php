@@ -4,52 +4,16 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\NewebPay\Traits\HasDefaults;
+use Omnipay\NewebPay\Traits\HasPeriod;
 
 class AlterPeriodStatusRequest extends AbstractRequest
 {
     use HasDefaults;
+    use HasPeriod;
 
     public function getEndpoint()
     {
         return parent::getEndpoint().'MPG/period/AlterStatus';
-    }
-
-    /**
-     * 商店訂單編號.
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setMerOrderNo($value)
-    {
-        return $this->setTransactionId($value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getMerOrderNo()
-    {
-        return $this->getTransactionId();
-    }
-
-    /**
-     * 委託單號.
-     *
-     * @param  string  $value
-     * @return self
-     */
-    public function setPeriodNo($value)
-    {
-        return $this->setParameter('PeriodNo', $value);
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getPeriodNo()
-    {
-        return $this->getParameter('PeriodNo');
     }
 
     /**
@@ -93,36 +57,13 @@ class AlterPeriodStatusRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $response = $this->httpClient->request('POST', $this->getEndpoint(), [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ], http_build_query([
-            'MerchantID_' => $this->getMerchantID(),
-            'PostData_' => $this->encrypt($data),
-        ]));
+        $response = $this->sendEncryptedRequest(
+            $this->httpClient,
+            $this->getEndpoint(),
+            $this->getMerchantID(),
+            $data
+        );
 
-        return $this->response = new AlterPeriodStatusResponse($this, $this->decodeResponse($response));
-    }
-
-    /**
-     * @return array
-     */
-    protected function decodeResponse($response)
-    {
-        $responseText = trim((string) $response->getBody());
-        parse_str($responseText, $result);
-
-        if (isset($result['period'])) {
-            $decrypted = $this->decrypt($result['period']);
-            $data = json_decode($decrypted, true);
-
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return array_merge(
-                    ['Status' => $data['Status'], 'Message' => $data['Message']],
-                    $data['Result'] ?? []
-                );
-            }
-        }
-
-        return $result;
+        return $this->response = new AlterPeriodStatusResponse($this, $this->decodePeriodResponse($response));
     }
 }

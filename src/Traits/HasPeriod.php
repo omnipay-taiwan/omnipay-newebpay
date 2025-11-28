@@ -263,4 +263,50 @@ trait HasPeriod
     {
         return $this->getCancelUrl();
     }
+
+    /**
+     * 委託單號.
+     *
+     * @param  string  $value
+     * @return self
+     */
+    public function setPeriodNo($value)
+    {
+        return $this->setParameter('PeriodNo', $value);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPeriodNo()
+    {
+        return $this->getParameter('PeriodNo');
+    }
+
+    /**
+     * 解密定期定額 API 回應.
+     * Response 中的 period 欄位包含加密的 JSON 資料
+     *
+     * @param  \Psr\Http\Message\ResponseInterface  $response
+     * @return array
+     */
+    protected function decodePeriodResponse($response)
+    {
+        $responseText = trim((string) $response->getBody());
+        parse_str($responseText, $result);
+
+        if (isset($result['period'])) {
+            $decrypted = $this->decrypt($result['period']);
+            $data = json_decode($decrypted, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return array_merge(
+                    ['Status' => $data['Status'], 'Message' => $data['Message']],
+                    $data['Result'] ?? []
+                );
+            }
+        }
+
+        return $result;
+    }
 }
