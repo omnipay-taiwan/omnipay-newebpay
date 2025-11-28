@@ -4,7 +4,7 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Message\NotificationInterface;
 
-class AcceptPeriodNotificationRequest extends CompletePeriodRequest implements NotificationInterface
+class AcceptPeriodNotificationRequest extends CompletePurchaseRequest implements NotificationInterface
 {
     public function sendData($data)
     {

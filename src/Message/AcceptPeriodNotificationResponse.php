@@ -4,7 +4,7 @@ namespace Omnipay\NewebPay\Message;
 
 use Omnipay\Common\Message\NotificationInterface;
 
-class AcceptPeriodNotificationResponse extends CompletePeriodResponse implements NotificationInterface
+class AcceptPeriodNotificationResponse extends CompletePurchaseResponse implements NotificationInterface
 {
     public function getTransactionStatus()
     {
