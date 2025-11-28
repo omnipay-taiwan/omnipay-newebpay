@@ -6,7 +6,12 @@ use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Message\RequestInterface;
 use Omnipay\NewebPay\Message\AcceptNotificationRequest;
+use Omnipay\NewebPay\Message\AcceptPeriodNotificationRequest;
+use Omnipay\NewebPay\Message\AlterPeriodAmtRequest;
+use Omnipay\NewebPay\Message\AlterPeriodStatusRequest;
+use Omnipay\NewebPay\Message\CompletePeriodRequest;
 use Omnipay\NewebPay\Message\CompletePurchaseRequest;
+use Omnipay\NewebPay\Message\CreatePeriodRequest;
 use Omnipay\NewebPay\Message\FetchTransactionRequest;
 use Omnipay\NewebPay\Message\GetPaymentInfoRequest;
 use Omnipay\NewebPay\Message\PurchaseRequest;
@@ -69,5 +74,30 @@ class Gateway extends AbstractGateway
     public function refund(array $options = []): RequestInterface
     {
         return $this->createRequest(RefundRequest::class, $options);
+    }
+
+    public function createPeriod(array $options = []): RequestInterface
+    {
+        return $this->createRequest(CreatePeriodRequest::class, $options);
+    }
+
+    public function completePeriod(array $options = []): RequestInterface
+    {
+        return $this->createRequest(CompletePeriodRequest::class, $options);
+    }
+
+    public function alterPeriodStatus(array $options = []): RequestInterface
+    {
+        return $this->createRequest(AlterPeriodStatusRequest::class, $options);
+    }
+
+    public function alterPeriodAmt(array $options = []): RequestInterface
+    {
+        return $this->createRequest(AlterPeriodAmtRequest::class, $options);
+    }
+
+    public function acceptPeriodNotification(array $options = []): NotificationInterface
+    {
+        return $this->createRequest(AcceptPeriodNotificationRequest::class, $options);
     }
 }
