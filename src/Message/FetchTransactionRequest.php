@@ -52,7 +52,7 @@ class FetchTransactionRequest extends AbstractRequest
             'MerchantOrderNo' => $this->getTransactionId(),
             'Amt' => (int) $this->getAmount(),
             'Gateway' => $this->getGateway(),
-        ], static function ($value) {
+        ], function ($value) {
             return $value !== null && $value !== '';
         });
 

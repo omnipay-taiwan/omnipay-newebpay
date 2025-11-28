@@ -93,7 +93,7 @@ class AlterPeriodAmtRequest extends AbstractRequest
             'PeriodTimes' => $this->getPeriodTimes(),
             'Extday' => $this->getExtday(),
             'NotifyURL' => $this->getNotifyURL(),
-        ], static function ($value) {
+        ], function ($value) {
             return $value !== null && $value !== '';
         });
     }

@@ -71,7 +71,7 @@ class VoidRequest extends AbstractRequest
             'TradeNo' => $this->getTransactionReference(),
             'IndexType' => $this->getIndexType(),
             'TimeStamp' => $this->getTimeStamp(),
-        ], static function ($value) {
+        ], function ($value) {
             return $value !== null && $value !== '';
         });
 

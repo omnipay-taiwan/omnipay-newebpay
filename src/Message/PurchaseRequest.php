@@ -240,7 +240,7 @@ class PurchaseRequest extends AbstractRequest
             $isPeriod ? $this->getPeriodData() : $this->getPaymentMethodData()
         );
 
-        return array_filter($data, static function ($value) {
+        return array_filter($data, function ($value) {
             return $value !== null && $value !== '';
         });
     }

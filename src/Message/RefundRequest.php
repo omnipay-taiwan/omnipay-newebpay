@@ -111,7 +111,7 @@ class RefundRequest extends AbstractRequest
             'TradeNo' => $this->getTransactionReference(),
             'CloseType' => $this->getCloseType() ?: 2,
             'Cancel' => $this->getCancel(),
-        ], static function ($value) {
+        ], function ($value) {
             return $value !== null && $value !== '';
         });
 
