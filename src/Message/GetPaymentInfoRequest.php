@@ -15,7 +15,7 @@ class GetPaymentInfoRequest extends AbstractRequest
     public function getData()
     {
         $tradeInfo = $this->httpRequest->request->get('TradeInfo');
-        if (! hash_equals($this->tradeSha($tradeInfo), $this->httpRequest->get('TradeSha', ''))) {
+        if (! hash_equals($this->tradeSha($tradeInfo), $this->httpRequest->request->get('TradeSha', ''))) {
             throw new InvalidRequestException('Incorrect TradeSha');
         }
 

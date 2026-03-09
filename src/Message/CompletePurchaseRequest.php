@@ -33,7 +33,7 @@ class CompletePurchaseRequest extends AbstractRequest
 
         // 一般交易：需要驗證 TradeSha
         $tradeInfo = $this->httpRequest->request->get('TradeInfo');
-        if (! hash_equals($this->tradeSha($tradeInfo), $this->httpRequest->get('TradeSha', ''))) {
+        if (! hash_equals($this->tradeSha($tradeInfo), $this->httpRequest->request->get('TradeSha', ''))) {
             throw new InvalidRequestException('Incorrect TradeSha');
         }
 
